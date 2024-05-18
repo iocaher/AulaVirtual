@@ -1,0 +1,317 @@
+body {
+    background-color: hsl(240, 100%, 100%);
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("../imagenes/4853433.jpg");
+    background-attachment:fixed;
+}
+
+H1 {
+    color: #646363;
+    text-decoration-line: underline;
+}
+
+H2 {
+    color: #646363;
+}
+
+a {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #f2f6f7;
+    border: 2px hidden #9db4f0;
+    padding: 13px; 
+    height: 50px;
+    color:#646363;
+}
+
+.container {
+    display:flex;
+    justify-content: center;
+    margin-top: 170px;
+    box-sizing:border-box;
+    
+}
+
+.login {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 10px;
+    padding-left: 60px;
+    padding-bottom: 30px;
+    width: 350px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+}
+
+.registro {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 10px;
+    padding-left: 60px;
+    padding-bottom: 30px;
+    width: 400px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+}
+.PaginaUsu {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 10px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 450px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+}
+
+.examenmod {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 600px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.listado {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 500px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.notasalu {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 400px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.respuesalu {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 55px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 600px;
+    
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.infoextr {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 380px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.errlog {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 25px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 500px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.notaspro {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 65px;
+    padding-bottom: 30px;
+    width: 430px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.preguns {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 550px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.examens {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 35px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 590px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.reginv {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 65px;
+    padding-bottom: 30px;
+    width: 450px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.regval {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 600px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.formulario {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding-top: 15px;
+    padding-right: 50px;
+    padding-left: 55px;
+    padding-bottom: 30px;
+    width: 600px;
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word
+}
+
+.preguns textarea{
+    vertical-align: top;
+}
+.botones {
+    padding-left: 25px;
+}
+
+.botones a{
+    font-weight: bold;
+}
+
+#modnom {
+    font-size: 17px;
+    text-decoration: none;
+}
+#campos {
+    color:#646363;
+    font-weight: bold;
+}
+
+#campos2 {
+    color:#646363;
+    font-weight: bold;
+    text-decoration-line: underline;
+}
+input[type=submit] {
+    background-color:rgb(211, 233, 238);
+    border-radius: 5px;
+    border: 2px hidden #9db4f0;
+    padding: 10px; 
+    height: 48px;
+    cursor: pointer;
+    color:#646363;
+    font-size: 17px;
+}
+.notasalu input[type=submit] {
+    background-color:rgb(211, 233, 238);
+    border-radius: 5px;
+    border: 2px hidden #9db4f0;
+    padding: 10px; 
+    height: 48px;
+    cursor: pointer;
+    color:#646363;
+    font-size: 17px;
+}
+
+#seleccion {
+    color:#646363;
+}
+#titex {
+    text-decoration-line: underline;
+}
+
+#logout {
+margin-left: 25px ;
+padding-right: 24px;
+padding-left: 24px;
+}
+
+#vuelvan {
+    padding-right: 24px;
+    padding-left: 24px; 
+    color: #646363;
+    font-weight: bold;   
+}
+
+.notasalu span {
+    margin-left: 13px;
+}
+
+span {
+    margin-left: 65px;
+}
+
+#radios {
+    color: #646363;
+}
+#spanpag {
+    margin-left: 25px;
+}
+
+#examsel{
+    padding-right: 29px;
+    padding-left: 29px;
+}
+
+.boton {
+    flex-direction: column;
+    border-radius: 30px;
+
+}
