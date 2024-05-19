@@ -16,7 +16,7 @@ echo '<html>
     <body>
     <div class="container">
         <div class="PaginaUsu">
-            <H2> Hola, <?php echo $_SESSION["Usuario"]; ?>: ¿qué desea hacer? </H2> <br>           
+            <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>           
             <div class=botones>
 
                     <p> <a id="examsel" href="ListadoExamen.php"> Examen </a> <span id="spanpag"></span>
@@ -45,7 +45,7 @@ else if ($rol == 'profesor') {
         <body>
         <div class="container">
             <div class="PaginaUsu">
-                <H2> Hola, <?php echo $_SESSION["Usuario"]; ?>: <br> ¿qué desea hacer? </H2> <br>
+                <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>
                 <div class=botones>
                     <p> <a id="examsel" href="Examen.php"> Examen </a> <span id="spanpag"></span>
     

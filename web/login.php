@@ -7,12 +7,12 @@ session_destroy();
 
 <!DOCTYPE html>
 <meta charset="UTF-8">
-
 <html>
 
     <head>
         <title> Conectarse </title>
         <link rel="stylesheet" href="../css/estilos.css">
+        <script src="../js/script.js"> </script>
     </head>
 
     <body>
