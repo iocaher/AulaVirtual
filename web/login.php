@@ -1,3 +1,10 @@
+<?php
+session_start();
+session_destroy();
+    require '../procesos/dbcon.php';
+
+?>
+
 <!DOCTYPE html>
 <meta charset="UTF-8">
 
@@ -13,7 +20,7 @@
         <div class="container">
             <div class="login">
                 <H1> Conectarse </H1>
-                <form action="../Procesos/Logear.php" method="POST">
+                <form action="#" method="POST">
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
                     <input type="text" name="Usuario" placeholder="usuario" size="28" required><br><br>
@@ -28,3 +35,12 @@
         </div>
     </body>
 </html>
+
+<?php
+
+    if (isset($_POST['Usuario'])) {
+
+        login($_POST['Usuario'], null, $_POST['secreto'], null);
+    }
+
+?>
