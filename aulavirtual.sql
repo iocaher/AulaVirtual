@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-05-2024 a las 09:16:35
+-- Tiempo de generación: 21-05-2024 a las 14:10:18
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -31,9 +31,15 @@ CREATE TABLE `alumnos` (
   `ID` varchar(7) NOT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   `apellidos` varchar(255) DEFAULT NULL,
-  `rol` varchar(10) NOT NULL,
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `alumnos`
+--
+
+INSERT INTO `alumnos` (`ID`, `nombre`, `apellidos`, `email`) VALUES
+('ivan', NULL, NULL, 'ivan@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -123,6 +129,13 @@ CREATE TABLE `profesores` (
   `email` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `profesores`
+--
+
+INSERT INTO `profesores` (`ID`, `nombre`, `apellidos`, `email`) VALUES
+('Juan', NULL, NULL, 'juangago@kursaal.com');
+
 -- --------------------------------------------------------
 
 --
@@ -147,6 +160,14 @@ CREATE TABLE `usuarios` (
   `contraseña` varchar(30) NOT NULL,
   `rol` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`ID`, `email`, `contraseña`, `rol`) VALUES
+('ivan', 'ivan@gmail.com', '1234', 'alumno'),
+('Juan', 'juangago@kursaal.com', '12345', 'profesor');
 
 --
 -- Disparadores `usuarios`

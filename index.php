@@ -24,7 +24,7 @@ echo '<html>
                     <a href="NotasAlumnos.php"> Consultar notas </a> </p><br>
 
 
-                    <p> <a href="ExtraAlum.php"> Información </a>
+                    <p> <a href="web/informacion.php"> Información </a>
                     
                         <a id="logout" href="web/login.php"> Cerrar sesión </a> </p>
         </div>
@@ -52,7 +52,7 @@ else if ($rol == 'profesor') {
                     <a href="ListadoAlumnos.php"> Consultar notas </a> </p><br>
     
     
-                    <p> <a href="ExtraProf.php"> Información </a>
+                    <p> <a href="web/informacion.php"> Información </a>
                     <a id="logout" href="web/login.php"> Cerrar sesión </a> </p>
                 </div>
             </div>
