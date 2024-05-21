@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-05-2024 a las 00:20:52
+-- Tiempo de generación: 21-05-2024 a las 09:16:35
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `AulaVirtual`
+-- Base de datos: `aulavirtual`
 --
 
 -- --------------------------------------------------------
@@ -31,7 +31,8 @@ CREATE TABLE `alumnos` (
   `ID` varchar(7) NOT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   `apellidos` varchar(255) DEFAULT NULL,
-  `rol` varchar(10) NOT NULL
+  `rol` varchar(10) NOT NULL,
+  `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 -- --------------------------------------------------------
@@ -146,6 +147,22 @@ CREATE TABLE `usuarios` (
   `contraseña` varchar(30) NOT NULL,
   `rol` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Disparadores `usuarios`
+--
+DELIMITER $$
+CREATE TRIGGER `after_user_insert` AFTER INSERT ON `usuarios` FOR EACH ROW BEGIN
+    IF NEW.rol = 'alumno' THEN
+        INSERT INTO alumnos (id, email)
+        VALUES (NEW.id, NEW.email);
+    ELSEIF NEW.rol = 'profesor' THEN
+        INSERT INTO profesores (id, email)
+        VALUES (NEW.id, NEW.email);
+    END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas

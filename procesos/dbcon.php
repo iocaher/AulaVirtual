@@ -50,6 +50,7 @@ function login($usuario, $email, $pass, $tipo) {
     }
     //Si no, devuelve a la pagina principal sin mas
     else {
+        $_SESSION['usuario'] = 'incorrecto';
         header("Location: ../index.php");    
     }
 
@@ -57,10 +58,14 @@ function login($usuario, $email, $pass, $tipo) {
     //Si usuario != null, entonces lo interpreta como un registro y lo añade a la base de datos.
     else {
 
-        $sql = "INSERT INTO usuario(email, userName, passW) VALUES ('$email', '$usuario', '$pass')";
+        $sql = "INSERT INTO usuarios(email, ID, contraseña, rol) VALUES('$email', '$usuario', '$pass', '$tipo')";
         $result = mysqli_query($conexion, $sql);
-        $_SESSION['usuario'] = $email;
-        header("Location: ../index.php");
+
+        if($result) {
+            $_SESSION['usuario'] = $usuario;
+            header("Location: ../index.php");
+        }
+        
         
     }
 

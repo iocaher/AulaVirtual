@@ -1,7 +1,9 @@
 <?php
-session_start();
-session_destroy();
-    require '../procesos/dbcon.php';
+
+    session_start();
+    session_destroy();
+    
+require '../procesos/dbcon.php';
 
 ?>
 
@@ -12,7 +14,6 @@ session_destroy();
     <head>
         <title> Conectarse </title>
         <link rel="stylesheet" href="../css/estilos.css">
-        <script src="../js/script.js"> </script>
     </head>
 
     <body>
@@ -20,7 +21,7 @@ session_destroy();
         <div class="container">
             <div class="login">
                 <H1> Conectarse </H1>
-                <form action="#" method="POST">
+                <form id="formulario" action="#" method="POST">
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
                     <input type="text" name="Usuario" placeholder="usuario" size="28" required><br><br>
@@ -29,7 +30,7 @@ session_destroy();
                     <input type="password" name="secreto" size="28" required><br><br>
 
                     <input type="submit" value="Entrar">
-                    <a href="Registro.html"> No estoy registrado </a>
+                    <a href="register.php"> No estoy registrado </a>
                 </form>
             </div>
         </div>

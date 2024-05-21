@@ -39,7 +39,7 @@ else if ($rol == 'profesor') {
     <meta charset="UTF-8">
     <head>
             <title> Página del Profesor </title>
-            <link rel="stylesheet" href="../css/estilos.css">
+            <link rel="stylesheet" href="css/estilos.css">
         </head>
     
         <body>
@@ -53,7 +53,7 @@ else if ($rol == 'profesor') {
     
     
                     <p> <a href="ExtraProf.php"> Información </a>
-                    <a id="logout" href="../Procesos/Logout.php"> Cerrar sesión </a> </p>
+                    <a id="logout" href="web/login.php"> Cerrar sesión </a> </p>
                 </div>
             </div>
         </div>
