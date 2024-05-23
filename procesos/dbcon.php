@@ -117,7 +117,7 @@ function listadoAsignaturasP() {
     // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
     while ($row = mysqli_fetch_assoc($result)) {
         //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la fecha de registro y el nombre del nodo a mostrar
-        $url = 'asignaturas.php?asignatura=' . $row['id'];
+        $url = 'asignaturas.php?matricula=' . $row['id'];
         //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
         //Será el nombre del nodo recogido anteriormente.
         $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
@@ -236,4 +236,41 @@ function listadoAsignaturasA() {
 
     echo $lineaDeBotones;
 }
+
+function listadoMatricula($asignatura) {
+
+    $conexion = conexionBD();
+
+    $usuario = $_SESSION['usuario'];
+
+    $sql = "SELECT matricula.id_asig, asignaturas.nombre, matricula.id_alumno, asignaturas.usuario 
+            FROM matricula
+            LEFT JOIN asignaturas ON matricula.id_asig = asignaturas.id
+            WHERE matricula.id_asig = '$asignatura';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $consulta[] = $row;
+    }
+
+    echo "<h1> ".$consulta[0]['nombre']." </h1>";
+    echo "<a> Profesor: " . $consulta[0]['usuario'] . "</a><span id='spanpag'><br></span>";
+
+    echo '<div class="dropdown">
+            <a> Listado de Alumnos </a>
+
+            <div class="dropdown-content">';
+            foreach($consulta as $alumnado) {
+                echo "<p>" . $alumnado['id_alumno']. "</p>";
+            }
+                    
+        echo '</div>
+    </div>';
+}
+
+
+
+
+
 ?>

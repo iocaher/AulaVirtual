@@ -21,32 +21,48 @@
 
                 if($_SESSION['tipo'] == 'profesor') {
 
-                    $comprobante = comprobarAsig($_SESSION['usuario']);
+                    if(isset($_GET['matricula'])) {
+                        
+                        $_SESSION['matricula'] = $_GET['matricula'];
 
-                    if($comprobante == 0) {
+                        listadoMatricula($_GET['matricula']);
+                        echo '<br><br><br>
+                            <h2> Herramienta de creación del examen </h2>';
+                        echo'<form action="examenes.php" method="POST">
 
-                        echo '<H2> Hola ' . $_SESSION["usuario"] . ', parece que no imparte ninguna asignatura aún </H2> <br>
-                        <form action="#" method="POST">
+                            <label id="campos"> Título del Examen </label>
+                            <input type="text" name="Examen" placeholder="Trimestral 1" required><br><br>
 
-                        <label id="campos"> Nombre de la asignatura </label>
-                        <input type="text" name="Asignatura" placeholder="Asignatura" required><br><br>
-
-                        <input type="submit" value="Comenzar">
-                        <a href="../index.php"> Volver </a>
-                        </form>';
-
-                        if (isset($_POST['Asignatura'])) {
-
-                            crearAsignatura($_POST['Asignatura']);
-                        }
-                        else {
-                            
-                        }
+                            <input type="submit" value="Comenzar">
+                            <a href="../web/asignaturas.php"> Volver </a>';
                     }
+                    else{
+                        $comprobante = comprobarAsig($_SESSION['usuario']);
 
+                        if($comprobante == 0) {
+
+                            echo '<H2> Hola ' . $_SESSION["usuario"] . ', parece que no imparte ninguna asignatura aún </H2> <br>
+                            <form action="#" method="POST">
+
+                            <label id="campos"> Nombre de la asignatura </label>
+                            <input type="text" name="Asignatura" placeholder="Asignatura" required><br><br>
+
+                            <input type="submit" value="Comenzar">
+                            <a href="../index.php"> Volver </a>
+                            </form>';
+
+                            if (isset($_POST['Asignatura'])) {
+
+                                crearAsignatura($_POST['Asignatura']);
+                            }
+                            else {
+                                
+                            }
+                        }
+                    
                     else {
 
-                    
+                    }
                 
                     echo listadoAsignaturasP() .'
 
@@ -71,6 +87,12 @@
                     }
                 }
                 else {
+                    if(isset($_GET['matricula'])) {
+                        
+                        listadoMatricula($_GET['matricula']);
+                    }
+                    else{
+
                     $comprobante = comprobarAsigAlum($_SESSION['usuario']);
 
                     if($comprobante == 0) {
@@ -96,6 +118,7 @@
                         echo listadoAsignaturas();
                     }
                 }
+            }
                 ?>
 
                 </div>
