@@ -279,6 +279,12 @@ ALTER TABLE `respuestas`
   MODIFY `id_resp` int(100) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `asignaturas`
+--
+ALTER TABLE `asignaturas`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
 -- Restricciones para tablas volcadas
 --
 

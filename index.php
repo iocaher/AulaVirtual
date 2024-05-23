@@ -19,7 +19,7 @@ echo '<html>
             <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>           
             <div class=botones>
 
-                    <p> <a id="examsel" href="ListadoExamen.php"> Examen </a> <span id="spanpag"></span>
+                    <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
 
                     <a href="NotasAlumnos.php"> Consultar notas </a> </p><br>
 
@@ -47,7 +47,7 @@ else if ($rol == 'profesor') {
             <div class="PaginaUsu">
                 <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>
                 <div class=botones>
-                    <p> <a id="examsel" href="Examen.php"> Examen </a> <span id="spanpag"></span>
+                    <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
     
                     <a href="ListadoAlumnos.php"> Consultar notas </a> </p><br>
     

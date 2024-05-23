@@ -71,5 +71,169 @@ function login($usuario, $email, $pass, $tipo) {
 
 }
 
+function comprobarAsig($usuario) {
 
+    $conexion = conexionBD();
+
+    $sql = "SELECT id 
+            FROM asignaturas 
+            WHERE usuario = '$usuario';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Si el resultado da alguna coincidencia, se crea la variable de sesion del usuario y se redirige a la pagina principal
+        if (mysqli_num_rows($result) >= 1) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+}
+
+function crearAsignatura($nombre) {
+    $conexion = conexionBD();
+
+    $sql = "INSERT INTO asignaturas (id, nombre, usuario) VALUES(NULL, '$nombre', '".$_SESSION['usuario']."');";
+
+    $result = mysqli_query($conexion, $sql);
+    header('Location: asignaturas.php');
+}
+
+function listadoAsignaturasP() {
+
+
+    echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas que imparte </H2>";
+    $conexion = conexionBD();
+
+    $sql = "SELECT id, nombre 
+            FROM asignaturas 
+            WHERE usuario = '".$_SESSION['usuario']."';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+    $lineaDeBotones = '<p>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la fecha de registro y el nombre del nodo a mostrar
+        $url = 'asignaturas.php?asignatura=' . $row['id'];
+        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+        //Será el nombre del nodo recogido anteriormente.
+        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+    }
+    //Y cerramos el contenedor del botón.
+    $lineaDeBotones .= '</p><br>';
+
+    echo $lineaDeBotones;
+}
+
+function comprobarAsigAlum($usuario) {
+
+    $conexion = conexionBD();
+
+    $sql = "SELECT id_alumno 
+            FROM matricula
+            WHERE id_alumno = '$usuario';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Si el resultado da alguna coincidencia, se crea la variable de sesion del usuario y se redirige a la pagina principal
+        if ($result) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+}
+
+function listadoAsignaturas() {
+
+    $conexion = conexionBD();
+
+    $alumno = $_SESSION['usuario'];
+
+    $sql = "SELECT asignaturas.id, asignaturas.nombre 
+        FROM asignaturas
+        LEFT JOIN matricula ON asignaturas.id = matricula.id_asig
+        WHERE matricula.id_alumno != '$alumno' OR matricula.id_alumno IS NULL;"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+    echo "<h2> Listado de Asignaturas donde no estás matriculado </h2>";
+    $lineaDeBotones = '<p>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la fecha de registro y el nombre del nodo a mostrar
+        $url = 'asignaturas.php?asignatura=' . $row['id'];
+        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+        //Será el nombre del nodo recogido anteriormente.
+        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+    }
+    //Y cerramos el contenedor del botón.
+    $lineaDeBotones .= '</p><br>';
+
+    echo $lineaDeBotones;
+    
+
+    if(isset($_GET['asignatura'])) {
+
+        echo '<h2> ¿Vas a matricularte en esta asignatura? </h2>';
+
+        $asignaturaSeleccionada = $_GET["asignatura"];
+        echo "<form action='' method='POST'>";
+        echo '<input type="hidden" name="asignaturaSeleccionada" value="' . $asignaturaSeleccionada . '">
+        
+        <input type="submit" value="Matricularme">
+        <a href="asignaturas.php"> Volver </a>
+        </form>';
+        if(isset($_POST['asignaturaSeleccionada'])) {
+
+            $conexion = conexionBD();
+            $alum = $_SESSION['usuario'];
+            $asig = $_POST['asignaturaSeleccionada'];
+
+            $sql = "INSERT INTO matricula(id_alumno, id_asig, curso) VALUES('$alum', '$asig', 2024);";
+
+            $result = mysqli_query($conexion, $sql);
+            header('Location: asignaturas.php');
+            
+        }
+    }
+    else {
+        
+    }
+}
+
+function listadoAsignaturasA() {
+
+    $conexion = conexionBD();
+
+    $alumno = $_SESSION['usuario'];
+
+    $sql = "SELECT matricula.id_asig, asignaturas.nombre 
+            FROM matricula
+            LEFT JOIN asignaturas ON matricula.id_asig = asignaturas.id
+            WHERE matricula.id_alumno = '$alumno';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+    $lineaDeBotones = '<p>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la fecha de registro y el nombre del nodo a mostrar
+        $url = 'asignaturas.php?matricula=' . $row['id_asig'];
+        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+        //Será el nombre del nodo recogido anteriormente.
+        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+    }
+    //Y cerramos el contenedor del botón.
+    $lineaDeBotones .= '</p><br>';
+
+    echo $lineaDeBotones;
+}
 ?>
