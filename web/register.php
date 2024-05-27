@@ -9,7 +9,7 @@ require '../procesos/dbcon.php';
 
     <head>
         <title> Registro </title>
-        <link rel="stylesheet" href="../css/estilos.css">
+        <link rel="stylesheet" href="../css/estilos.css?v=1.0">
         
     </head>
 

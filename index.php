@@ -10,7 +10,7 @@ echo '<html>
 <meta charset="UTF-8">
 <head>
         <title> Página del Alumno </title>
-        <link rel="stylesheet" href="css/estilos.css">
+        <link rel="stylesheet" href="css/estilos.css?v=1.0">
     </head>
 
     <body>
@@ -39,7 +39,7 @@ else if ($rol == 'profesor') {
     <meta charset="UTF-8">
     <head>
             <title> Página del Profesor </title>
-            <link rel="stylesheet" href="css/estilos.css">
+            <link rel="stylesheet" href="css/estilos.css?v=1.0">
         </head>
     
         <body>
@@ -62,6 +62,6 @@ else if ($rol == 'profesor') {
 }
 else {
     
-    header('location:web/login.php');
+    header('location:web/login.php?success=false');
 }
 ?>

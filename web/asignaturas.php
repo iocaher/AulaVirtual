@@ -8,7 +8,7 @@
     <head>
     <title> Examenes </title>
     
-    <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="stylesheet" href="../css/estilos.css?v=1.0">
     
     </head>
 
@@ -18,7 +18,9 @@
             <div class="examens">
 
             <?php
-
+                if (isset($_GET['success']) && $_GET['success'] == 'true') {
+                    echo '<div class="success-message"><span>&#10004;</span> Examen creado exitosamente.</div>';
+                }
                 if($_SESSION['tipo'] == 'profesor') {
 
                     if(isset($_GET['matricula'])) {
@@ -90,6 +92,10 @@
                     if(isset($_GET['matricula'])) {
                         
                         listadoMatricula($_GET['matricula']);
+
+                        echo '<h2> Examenes de esta asignatura </h2>';
+                        listadoExamenes($_GET['matricula']);
+                        echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
                     }
                     else{
 

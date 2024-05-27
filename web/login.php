@@ -13,7 +13,7 @@ require '../procesos/dbcon.php';
 
     <head>
         <title> Conectarse </title>
-        <link rel="stylesheet" href="../css/estilos.css">
+        <link rel="stylesheet" href="../css/estilos.css?v=1.0">
     </head>
 
     <body>
@@ -22,6 +22,9 @@ require '../procesos/dbcon.php';
             <div class="login">
                 <H1> Conectarse </H1>
                 <form id="formulario" action="#" method="POST">
+
+                <?php if (isset($_GET['success']) && $_GET['success'] == 'false') {
+                echo '<div class="success-message"><span>&#10004;</span> Usuario incorrecto </div>'; } ?>
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
                     <input type="text" name="Usuario" placeholder="usuario" size="28" required><br><br>
