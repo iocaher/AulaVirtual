@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-05-2024 a las 14:10:18
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 28-05-2024 a las 15:26:32
+-- Versión del servidor: 10.4.18-MariaDB
+-- Versión de PHP: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `alumnos` (
-  `ID` varchar(7) NOT NULL,
-  `nombre` varchar(255) DEFAULT NULL,
-  `apellidos` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL
+  `ID` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `apellidos` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -49,9 +49,16 @@ INSERT INTO `alumnos` (`ID`, `nombre`, `apellidos`, `email`) VALUES
 
 CREATE TABLE `asignaturas` (
   `id` int(10) NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `usuario` varchar(7) NOT NULL
+  `nombre` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `usuario` varchar(7) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `asignaturas`
+--
+
+INSERT INTO `asignaturas` (`id`, `nombre`, `usuario`) VALUES
+(3, 'Desarrollo Web Servidor', 'juan');
 
 -- --------------------------------------------------------
 
@@ -60,10 +67,72 @@ CREATE TABLE `asignaturas` (
 --
 
 CREATE TABLE `cuestionario` (
-  `id_alumno` varchar(7) NOT NULL,
-  `id_resp` int(100) NOT NULL,
-  `respuesta` int(11) NOT NULL
+  `id_alumno` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `id_preg` int(100) NOT NULL,
+  `respuesta` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `correcta` varchar(2) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `cuestionario`
+--
+
+INSERT INTO `cuestionario` (`id_alumno`, `id_preg`, `respuesta`, `correcta`) VALUES
+('ivan', 5, 'cinco', 'NO'),
+('ivan', 6, 'gatito', 'NO'),
+('ivan', 7, 'reptil', 'SI');
+
+--
+-- Disparadores `cuestionario`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_cuestionario` AFTER INSERT ON `cuestionario` FOR EACH ROW BEGIN
+    DECLARE exam_count INT;
+
+    -- Contar el número de preguntas respondidas para el examen y el alumno específico
+    SELECT COUNT(*) INTO exam_count
+    FROM cuestionario
+    WHERE id_alumno = NEW.id_alumno
+      AND id_preg IN (SELECT id_preg FROM preguntas WHERE id_examen = (SELECT id_examen FROM preguntas WHERE id_preg = NEW.id_preg LIMIT 1));
+
+    -- Si es la primera respuesta para este examen y alumno, insertamos un registro en notas
+    IF exam_count = 1 THEN
+        INSERT INTO notas (id_alumno, id_exam, fecha, nota)
+        VALUES (
+            NEW.id_alumno,
+            (SELECT id_examen FROM preguntas WHERE id_preg = NEW.id_preg LIMIT 1),
+            NOW(),
+            NULL
+        );
+    END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_update_cuestionario` AFTER UPDATE ON `cuestionario` FOR EACH ROW BEGIN
+    DECLARE correctas_count INT;
+    DECLARE examen_id INT;
+
+    -- Obtener el ID del examen a través de la tabla preguntas
+    SELECT id_examen INTO examen_id
+    FROM preguntas
+    WHERE id_preg = NEW.id_preg;
+
+    -- Contar las respuestas correctas ('SI') en la tabla cuestionario para el alumno y examen específicos
+    SELECT COUNT(*) INTO correctas_count
+    FROM cuestionario
+    WHERE id_alumno = NEW.id_alumno
+    AND id_preg IN (SELECT id_preg FROM preguntas WHERE id_examen = examen_id)
+    AND correcta = 'SI';
+
+    -- Actualizar la nota en la tabla notas
+    UPDATE notas
+    SET nota = correctas_count
+    WHERE id_alumno = NEW.id_alumno
+    AND id_exam = examen_id;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -73,11 +142,18 @@ CREATE TABLE `cuestionario` (
 
 CREATE TABLE `examenes` (
   `id_exam` int(100) NOT NULL,
-  `nombre` varchar(255) DEFAULT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
   `num_preg` int(10) DEFAULT NULL,
   `realizados` int(10) DEFAULT NULL,
   `id_asig` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `examenes`
+--
+
+INSERT INTO `examenes` (`id_exam`, `nombre`, `num_preg`, `realizados`, `id_asig`) VALUES
+(12, 'Examen Trimestral 3', NULL, NULL, 3);
 
 -- --------------------------------------------------------
 
@@ -86,10 +162,17 @@ CREATE TABLE `examenes` (
 --
 
 CREATE TABLE `matricula` (
-  `id_alumno` varchar(7) NOT NULL,
+  `id_alumno` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
   `id_asig` int(10) NOT NULL,
   `curso` year(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `matricula`
+--
+
+INSERT INTO `matricula` (`id_alumno`, `id_asig`, `curso`) VALUES
+('ivan', 3, 2024);
 
 -- --------------------------------------------------------
 
@@ -98,11 +181,51 @@ CREATE TABLE `matricula` (
 --
 
 CREATE TABLE `notas` (
-  `id_alumno` varchar(7) NOT NULL,
+  `id_alumno` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
   `id_exam` int(100) NOT NULL,
   `nota` int(2) DEFAULT NULL,
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `notas`
+--
+
+INSERT INTO `notas` (`id_alumno`, `id_exam`, `nota`, `fecha`) VALUES
+('ivan', 12, 1, '2024-05-28');
+
+--
+-- Disparadores `notas`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_notas` AFTER INSERT ON `notas` FOR EACH ROW BEGIN
+    DECLARE exam_count INT;
+
+    -- Contar el número de veces que aparece el id_exam en la tabla notas
+    SELECT COUNT(*) INTO exam_count
+    FROM notas
+    WHERE id_exam = NEW.id_exam;
+
+    -- Actualizar la columna realizados en la tabla examenes
+    UPDATE examenes
+    SET realizados = exam_count
+    WHERE id_exam = NEW.id_exam;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `before_delete_notas` BEFORE DELETE ON `notas` FOR EACH ROW BEGIN
+    -- Eliminar las respuestas correspondientes de la tabla 'cuestionario'
+    DELETE FROM cuestionario
+    WHERE id_alumno = OLD.id_alumno
+      AND id_preg IN (
+          SELECT id_preg
+          FROM preguntas
+          WHERE id_examen = OLD.id_exam
+      );
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -113,8 +236,37 @@ CREATE TABLE `notas` (
 CREATE TABLE `preguntas` (
   `id_examen` int(100) NOT NULL,
   `id_preg` int(100) NOT NULL,
-  `titulo` varchar(255) NOT NULL
+  `titulo` varchar(255) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `preguntas`
+--
+
+INSERT INTO `preguntas` (`id_examen`, `id_preg`, `titulo`) VALUES
+(12, 5, '2+2'),
+(12, 6, 'perrito'),
+(12, 7, 'Camaleon');
+
+--
+-- Disparadores `preguntas`
+--
+DELIMITER $$
+CREATE TRIGGER `after_insert_preguntas` AFTER INSERT ON `preguntas` FOR EACH ROW BEGIN
+    DECLARE preguntas_count INT;
+
+    -- Contar el número de preguntas para el examen específico
+    SELECT COUNT(*) INTO preguntas_count
+    FROM preguntas
+    WHERE id_examen = NEW.id_examen;
+
+    -- Actualizar la columna num_preg en la tabla examenes
+    UPDATE examenes
+    SET num_preg = preguntas_count
+    WHERE id_exam = NEW.id_examen;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -123,10 +275,10 @@ CREATE TABLE `preguntas` (
 --
 
 CREATE TABLE `profesores` (
-  `ID` varchar(7) NOT NULL,
-  `nombre` varchar(255) DEFAULT NULL,
-  `apellidos` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL
+  `ID` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `nombre` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `apellidos` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -145,8 +297,18 @@ INSERT INTO `profesores` (`ID`, `nombre`, `apellidos`, `email`) VALUES
 CREATE TABLE `respuestas` (
   `id_preg` int(100) NOT NULL,
   `id_resp` int(100) NOT NULL,
-  `respuesta` varchar(255) NOT NULL
+  `respuesta` varchar(255) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `respuestas`
+--
+
+INSERT INTO `respuestas` (`id_preg`, `id_resp`, `respuesta`) VALUES
+(5, 3, 'cinco'),
+(5, 4, 'cuatro'),
+(7, 5, 'reptil'),
+(7, 6, 'ave');
 
 -- --------------------------------------------------------
 
@@ -155,10 +317,10 @@ CREATE TABLE `respuestas` (
 --
 
 CREATE TABLE `usuarios` (
-  `ID` varchar(7) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `contraseña` varchar(30) NOT NULL,
-  `rol` varchar(10) NOT NULL
+  `ID` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `contraseña` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `rol` varchar(10) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
@@ -206,8 +368,8 @@ ALTER TABLE `asignaturas`
 -- Indices de la tabla `cuestionario`
 --
 ALTER TABLE `cuestionario`
-  ADD PRIMARY KEY (`id_alumno`,`id_resp`),
-  ADD KEY `resp_cuest` (`id_resp`);
+  ADD PRIMARY KEY (`id_alumno`,`id_preg`),
+  ADD KEY `preg_cuest` (`id_preg`) USING BTREE;
 
 --
 -- Indices de la tabla `examenes`
@@ -261,28 +423,28 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `asignaturas`
+--
+ALTER TABLE `asignaturas`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id_exam` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_exam` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id_preg` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_preg` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id_resp` int(100) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `asignaturas`
---
-ALTER TABLE `asignaturas`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_resp` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -305,7 +467,7 @@ ALTER TABLE `asignaturas`
 --
 ALTER TABLE `cuestionario`
   ADD CONSTRAINT `alum_resp` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `resp_cuest` FOREIGN KEY (`id_resp`) REFERENCES `respuestas` (`id_resp`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `preg_cuest` FOREIGN KEY (`id_preg`) REFERENCES `preguntas` (`id_preg`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `examenes`

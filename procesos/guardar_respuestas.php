@@ -20,6 +20,9 @@ if (!$conn) {
         if (!mysqli_query($conn, $sql)) {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
+        else {
+            header('Location: ../web/asignaturas.php');
+        }
     }
 
 ?>

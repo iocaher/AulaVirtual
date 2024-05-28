@@ -49,7 +49,7 @@ else if ($rol == 'profesor') {
                 <div class=botones>
                     <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
     
-                    <a href="ListadoAlumnos.php"> Consultar notas </a> </p><br>
+                    <a href="web/listadoprofe.php"> Corregir examenes </a> </p><br>
     
     
                     <p> <a href="web/informacion.php"> Información </a>

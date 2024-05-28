@@ -119,9 +119,11 @@
                     else {
                         echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas en las que está matriculado </H2>";
                         listadoAsignaturasA();
-                        echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
+                        
 
                         echo listadoAsignaturas();
+
+                        echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
                     }
                 }
             }

@@ -289,9 +289,10 @@ function listadoExamenes($asignatura) {
     $usuario = $_SESSION['usuario'];
 
     //Recogemos el id del examen y su nombre, que concuerde con la asignatura seleccionada
-    $sql = "SELECT id_exam, nombre
-            FROM examenes
-            WHERE id_asig = '$asignatura';"; 
+    $sql = "SELECT examenes.id_exam, examenes.nombre 
+    FROM examenes 
+    LEFT JOIN notas ON examenes.id_exam = notas.id_exam AND notas.id_alumno = '$usuario'
+    WHERE examenes.id_asig = '$asignatura' AND notas.id_exam IS NULL;"; 
 
     $result = mysqli_query($conexion, $sql);
 
@@ -331,7 +332,7 @@ function examenDesplegar() {
 
     foreach ($preguntas as $pregunta) {
         echo "<div>"; //Por cada pregunta escribimos su titulo
-        echo "<h3>" . $pregunta['titulo'] . "</h3>";
+        echo "<label id='campos'>" . $pregunta['titulo'] . "</label><br><br><br>";
 
         //Y hacemos una consulta que recoja las respuestas a esas preguntas
         $id_preg = $pregunta['id_preg'];
@@ -343,17 +344,144 @@ function examenDesplegar() {
         //seleccion tipo test.
         if (count($respuestas) > 0) {
             foreach ($respuestas as $respuesta) {
-                echo "<label>";
+                echo "<label id='radios'>";
                 echo "<input type='radio' name='respuesta[$id_preg]' value='" . $respuesta['respuesta'] . "'>";
                 echo $respuesta['respuesta'];
-                echo "</label>";
+                echo "</label><br><br>";
             }
         } else {
             echo "<input type='text' name='respuesta[$id_preg]'>";
+            
         }
-        echo "</div>";
+        echo "</div><br><hr><br>";
+        
     }
+    
 }
 
+function examenCorregir($alumno, $id_exam) {
+    $conexion = conexionBD();
+
+    // Obtenemos el nombre del examen
+    $sql_nombre = "SELECT nombre FROM examenes WHERE id_exam = '$id_exam';";
+    $result_nombre = mysqli_query($conexion, $sql_nombre);
+    $examen = mysqli_fetch_assoc($result_nombre);
+
+    echo "<h1>" . $examen['nombre'] . "</h1>";
+
+    echo "<form action='../procesos/procesar_correccion.php' method='POST'>";
+
+    // Buscamos las preguntas que existan en la base de datos con el id del examen asociado
+    $sql = "SELECT *
+            FROM preguntas
+            WHERE id_examen = '$id_exam';"; 
+
+    $result = mysqli_query($conexion, $sql);
+    // Guardamos como array asociativo las preguntas para operar con ellas luego
+    $preguntas = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    foreach ($preguntas as $pregunta) {
+        echo "<div>"; // Por cada pregunta escribimos su título
+        echo "<label id='campos'>" . $pregunta['titulo'] . "</label><br><br><br>";
+
+        // Y hacemos una consulta que recoja las respuestas a esas preguntas del cuestionario
+        $id_preg = $pregunta['id_preg'];
+        $sql_resp = "SELECT * FROM cuestionario WHERE id_preg = $id_preg AND id_alumno = '$alumno'";
+        $result_resp = mysqli_query($conexion, $sql_resp);
+        $cuestionario = mysqli_fetch_all($result_resp, MYSQLI_ASSOC);
+
+        if (count($cuestionario) > 0) {
+            foreach ($cuestionario as $item) {
+                echo "<div id='respuestas'>";
+                echo "<table>";
+                echo "<tr>";
+                echo "<td rowspan='2'>" . $item['respuesta'] . "</td>";
+                
+                $correcto_checked = ($item['correcta'] == 'SI') ? 'checked' : '';
+                $incorrecto_checked = ($item['correcta'] == 'NO') ? 'checked' : '';
+
+                echo "<td>";
+                echo "<label id='correcto'>";
+                echo "<input type='radio' name='correcto[$id_preg]' value='SI' $correcto_checked> Correcto";
+                echo "</label>";
+                echo "</td>";
+                echo "</tr>";
+
+                echo "<tr>";
+                echo "<td>";
+                echo "<label id='incorrecto'>";
+                echo "<input type='radio' name='correcto[$id_preg]' value='NO' $incorrecto_checked> Incorrecto";
+                echo "</label>";
+                echo "</td>";
+                echo "</tr>";
+
+                echo "</table>";
+                echo "</div><br><br>";
+            }
+        }
+        echo "</div><br><hr><br>";
+    }
+
+    echo "<input type='hidden' name='id_exam' value='$id_exam'>";
+    echo "<input type='hidden' name='id_alumno' value='$alumno'>";
+    echo "<input type='submit' value='Enviar Corrección'>";
+    echo "</form>";
+}
+
+function listadoAsignaturasPC() {
+
+
+    echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas que imparte </H2>";
+    $conexion = conexionBD();
+
+    $sql = "SELECT id, nombre 
+            FROM asignaturas 
+            WHERE usuario = '".$_SESSION['usuario']."';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+    $lineaDeBotones = '<p>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
+        $url = 'listadoprofe.php?matricula=' . $row['id'];
+        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+        //Será el nombre de la asignatura recogida anteriormente.
+        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+    }
+    //Y cerramos el contenedor del botón.
+    $lineaDeBotones .= '</p><br>';
+
+    echo $lineaDeBotones;
+}
+
+function listadoExamenesRealizados($asignatura) {
+
+    $conexion = conexionBD();
+
+    $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
+            FROM notas
+            LEFT JOIN examenes ON notas.id_exam = notas.id_exam AND examenes.id_asig = $asignatura"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    $formulario = '<form action="#" method="POST">';
+    $formulario .= '<h2>Examenes</h2>';
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $id_exam = $row['id_exam'];
+        $id_alumno = $row['id_alumno'];
+        $nombre = $row['nombre'];
+        $nota = $row['nota'];
+
+        $formulario .= '<input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '">';
+        $formulario .= '<label for="' . $id_exam . '_' . $id_alumno . '">' . $nombre . ' - ' . $id_alumno . ' - Nota: ' . $nota . '</label><br>';
+    }
+
+    echo $formulario;
+
+}
 
 ?>

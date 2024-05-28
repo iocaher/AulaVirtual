@@ -26,6 +26,7 @@
                     </div>
                     <br>
                     <input type="submit" value="Terminar examen">
+                    <div align="right"><a href="asignaturas.php"> Volver </a></div>
                 </form>
 
             </div>

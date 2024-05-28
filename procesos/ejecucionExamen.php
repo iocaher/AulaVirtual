@@ -34,8 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Si la pregunta es de tipo 'test', insertar las opciones de respuesta
                 if (isset($pregunta['opciones'])) {
+                    
                     foreach ($pregunta['opciones'] as $opcion) {
+
                         $texto_opcion = mysqli_real_escape_string($conn, $opcion['texto']);
+
                         $correcta = isset($opcion['correcta']) ? 1 : 0;
 
                         // Insertar la opción de respuesta
