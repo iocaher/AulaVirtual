@@ -9,6 +9,7 @@
     <title> Examenes </title>
     
     <link rel="stylesheet" href="../css/estilos.css?v=1.0">
+    <script src="../js/consultar.js"> </script>
     
     </head>
 
@@ -27,14 +28,11 @@
 
                         // Separar los valores del id_exam y id_alumno
                         list($id_exam, $id_alumno) = explode('_', $examen_alumno);
-                        examenCorregir($id_alumno, $id_exam);
+                        examenConsultar($id_alumno, $id_exam);
                     }
                     else{
 
                     $_SESSION['matricula'] = $_GET['matricula'];
-                    if (isset($_GET['success']) && $_GET['success'] == 'true') {
-                        echo '<div class="success-message"><span>&#10004;</span> Examen corregido exitosamente.</div>';
-                    }
 
                     listadoMatricula($_GET['matricula']);
                     
@@ -42,25 +40,20 @@
 
                     listadoExamenesRealizados($_SESSION['matricula']);
 
-                    echo'<input type="submit" value="Corregir">';
+                    echo'<input type="submit" value="Consultar">';
 
                     }
-                        echo'<a href="../web/listadoprofe.php"> Volver </a>';
+                        echo'<a href="../web/listadoalum.php"> Volver </a>';
                 }
                 else{
                     $comprobante = comprobarAsig($_SESSION['usuario']);
 
-                    if($comprobante == 0) {
+                    if($comprobante == 1) {
 
-                        echo '<H2> Hola ' . $_SESSION["usuario"] . ', parece que no imparte ninguna asignatura aún </H2> <br>
-                        <form action="#" method="POST">
-
-                        <label id="campos"> Nombre de la asignatura </label>
-                        <input type="text" name="Asignatura" placeholder="Asignatura" required><br><br>
-
-                        <input type="submit" value="Comenzar">
-                        <a href="../index.php"> Volver </a>
-                        </form>';
+                        echo "<H2> Hola " . $_SESSION['usuario'] . ", parece que no está matriculado en ninguna asignatura.
+                        <br>Elija una del listado a continuación </H2> <br>
+                        <form action='' method='POST'>";
+                        echo listadoAsignaturas();
 
                         if (isset($_POST['Asignatura'])) {
 
@@ -71,13 +64,18 @@
                         }
                     }
                 
-                else {
+                    else {
+                        echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas en las que está matriculado </H2>";
+                        listadoAsignaturasAC();
+                        
 
-                }
+                        //echo listadoAsignaturas();
+
+                    }
             
-                echo listadoAsignaturasPC();
-                echo '<a href="../index.php"> Volver </a>';
-                    
+                
+
+                    echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';                    
 
 
 

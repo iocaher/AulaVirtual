@@ -358,3 +358,31 @@ span {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.table-form {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-form th, .table-form td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-form th {
+    background-color: #f2f6f7;
+    color: #646363;
+    text-align: left;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.table-form td {
+    background-color: rgb(255, 255, 255);
+    color: #646363;
+}
+
+.table-form input[type="radio"] {
+    margin-right: 10px;
+}

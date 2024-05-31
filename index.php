@@ -21,7 +21,7 @@ echo '<html>
 
                     <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
 
-                    <a href="NotasAlumnos.php"> Consultar notas </a> </p><br>
+                    <a href="web/listadoalum.php"> Consultar notas </a> </p><br>
 
 
                     <p> <a href="web/informacion.php"> Información </a>

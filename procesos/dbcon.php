@@ -145,7 +145,7 @@ function comprobarAsigAlum($usuario) {
 
     //Si el resultado da al menos una coincidencia, devuelve 1, si no, devuelve 0
     //Esta funcion sirve para que muestre o no un apartado
-        if ($result) {
+        if (mysqli_num_rows($result) >= 1) {
             return 1;
         }
         else {
@@ -254,32 +254,46 @@ function listadoMatricula($asignatura) {
     $usuario = $_SESSION['usuario'];
 
     //Buscamos las asignaturas del alumno que esté matriculado en estas y las listamos
-    $sql = "SELECT matricula.id_asig, asignaturas.nombre, matricula.id_alumno, asignaturas.usuario 
-            FROM matricula
-            LEFT JOIN asignaturas ON matricula.id_asig = asignaturas.id
-            WHERE matricula.id_asig = '$asignatura';"; 
+    $sql = "SELECT nombre, usuario 
+            FROM asignaturas
+            WHERE id = '$asignatura';"; 
 
     $result = mysqli_query($conexion, $sql);
 
-    //Guardamos el resultado en un array asociativo
-    while ($row = mysqli_fetch_assoc($result)) {
-        $consulta[] = $row;
-    }
+    if($result) {
+        //Guardamos el resultado en un array asociativo
+        while ($row = mysqli_fetch_assoc($result)) {
+            $consultaAsig[] = $row;
+        }
 
-    //Muestra la asignatura, el profesor que la imparte y un desplegable con el resultado de alumnos matriculados en esa asignatura
-    echo "<h1> ".$consulta[0]['nombre']." </h1>";
-    echo "<a> Profesor: " . $consulta[0]['usuario'] . "</a><span id='spanpag'></span>";
+        //Muestra la asignatura, el profesor que la imparte y un desplegable con el resultado de alumnos matriculados en esa asignatura
+        
+        echo "<h1> ".$consultaAsig[0]['nombre']." </h1>";
+        echo "<a> Profesor: " . $consultaAsig[0]['usuario'] . "</a><span id='spanpag'></span>";
 
-    echo '<div class="dropdown">
-            <a> Listado de Alumnos </a>
+                $sql2 = "SELECT id_alumno
+                FROM matricula
+                WHERE id_asig = '$asignatura';"; 
 
-            <div class="dropdown-content">';
-            foreach($consulta as $alumnado) {
-                echo "<p>" . $alumnado['id_alumno']. "</p>";
+        $resul2 = mysqli_query($conexion, $sql2);
+
+        if(mysqli_num_rows($resul2) >= 1) {
+            $consultaMatri = array();  // Inicializar el array antes de usarlo
+            while ($row2 = mysqli_fetch_assoc($resul2)) {
+                $consultaMatri[] = $row2;
             }
-                    
-        echo '</div>
-    </div>';
+
+            echo '<div class="dropdown">
+                    <a> Listado de Alumnos </a>
+                    <div class="dropdown-content">';
+                    foreach($consultaMatri as $alumnado) {
+                        echo "<p>" . $alumnado['id_alumno']. "</p>";
+                    }
+            echo '</div>
+                </div>';
+        }
+    }
+    
 }
 
 function listadoExamenes($asignatura) {
@@ -400,7 +414,7 @@ function examenCorregir($alumno, $id_exam) {
                 $correcto_checked = ($item['correcta'] == 'SI') ? 'checked' : '';
                 $incorrecto_checked = ($item['correcta'] == 'NO') ? 'checked' : '';
 
-                echo "<td>";
+                echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>";
                 echo "<label id='correcto'>";
                 echo "<input type='radio' name='correcto[$id_preg]' value='SI' $correcto_checked> Correcto";
                 echo "</label>";
@@ -408,7 +422,7 @@ function examenCorregir($alumno, $id_exam) {
                 echo "</tr>";
 
                 echo "<tr>";
-                echo "<td>";
+                echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>";
                 echo "<label id='incorrecto'>";
                 echo "<input type='radio' name='correcto[$id_preg]' value='NO' $incorrecto_checked> Incorrecto";
                 echo "</label>";
@@ -460,28 +474,149 @@ function listadoAsignaturasPC() {
 function listadoExamenesRealizados($asignatura) {
 
     $conexion = conexionBD();
+    $alumno = $_SESSION['usuario'];
 
-    $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
-            FROM notas
-            LEFT JOIN examenes ON notas.id_exam = notas.id_exam AND examenes.id_asig = $asignatura"; 
+    if($_SESSION['tipo'] == 'profesor')
+    {
+        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
+        FROM notas
+        LEFT JOIN examenes ON notas.id_exam = examenes.id_exam
+        WHERE examenes.id_asig = $asignatura";  
+
+        $result = mysqli_query($conexion, $sql);
+
+        $formulario = '<form action="#" method="post">';
+        $formulario .= '<table class="table-form">';
+        $formulario .= '<tr><th>Seleccionar</th><th>Nombre de Examen</th><th>Nombre de Alumno</th><th>Nota</th></tr>';
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $id_exam = $row['id_exam'];
+            $id_alumno = $row['id_alumno'];
+            $nombre = $row['nombre'];
+            $nota = $row['nota'];
+
+            $formulario .= '<tr>';
+            $formulario .= '<td><input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '"></td>';
+            $formulario .= '<td>' . $nombre . '</td>';
+            $formulario .= '<td>' . $id_alumno . '</td>';
+            $formulario .= '<td>' . $nota . '</td>';
+            $formulario .= '</tr>';
+        }
+
+        $formulario .= '</table><br>';
+
+        echo $formulario;
+    }
+    else {
+        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
+        FROM notas
+        LEFT JOIN examenes ON notas.id_exam = examenes.id_exam AND notas.id_alumno = '$alumno'
+        WHERE examenes.id_asig = $asignatura";  
+
+        $result = mysqli_query($conexion, $sql);
+
+        $formulario = '<form action="#" method="post">';
+        $formulario .= '<table class="table-form" border="1">';
+        $formulario .= '<tr><th>Seleccionar</th><th>Nombre de Examen</th><th>Nombre de Alumno</th><th>Nota</th></tr>';
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $id_exam = $row['id_exam'];
+            $id_alumno = $row['id_alumno'];
+            $nombre = $row['nombre'];
+            $nota = $row['nota'];
+
+            $formulario .= '<tr>';
+            if($nota != null) {
+                $formulario .= '<td><input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '"></td>';
+            }
+            else{
+                $formulario .= '<td> Corrección pendiente... </td>';
+            }
+            $formulario .= '<td>' . $nombre . '</td>';
+            $formulario .= '<td>' . $id_alumno . '</td>';
+            $formulario .= '<td>' . $nota . '</td>';
+            $formulario .= '</tr>';
+        }
+
+        $formulario .= '</table><br>';
+
+        echo $formulario;
+    }
+}
+
+function listadoAsignaturasAC() {
+
+    $conexion = conexionBD();
+
+    $alumno = $_SESSION['usuario'];
+
+    $sql = "SELECT matricula.id_asig, asignaturas.nombre 
+            FROM matricula
+            LEFT JOIN asignaturas ON matricula.id_asig = asignaturas.id
+            WHERE matricula.id_alumno = '$alumno';"; 
 
     $result = mysqli_query($conexion, $sql);
 
-    $formulario = '<form action="#" method="POST">';
-    $formulario .= '<h2>Examenes</h2>';
+    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+    $lineaDeBotones = '<p>';
 
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
     while ($row = mysqli_fetch_assoc($result)) {
-        $id_exam = $row['id_exam'];
-        $id_alumno = $row['id_alumno'];
-        $nombre = $row['nombre'];
-        $nota = $row['nota'];
-
-        $formulario .= '<input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '">';
-        $formulario .= '<label for="' . $id_exam . '_' . $id_alumno . '">' . $nombre . ' - ' . $id_alumno . ' - Nota: ' . $nota . '</label><br>';
+                //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
+        $url = 'listadoalum.php?matricula=' . $row['id_asig'];
+        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+        //Será el nombre de la asignatura recogida anteriormente.
+        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
     }
+    //Y cerramos el contenedor del botón.
+    $lineaDeBotones .= '</p><br>';
 
-    echo $formulario;
-
+    echo $lineaDeBotones;
 }
 
+function examenConsultar($alumno, $id_exam) {
+    
+    $conexion = conexionBD();
+
+    // Obtenemos el nombre del examen
+    $sql_nombre = "SELECT nombre FROM examenes WHERE id_exam = '$id_exam';";
+    $result_nombre = mysqli_query($conexion, $sql_nombre);
+    $examen = mysqli_fetch_assoc($result_nombre);
+
+    echo "<h1>" . $examen['nombre'] . "</h1>";
+
+    // Buscamos las preguntas que existan en la base de datos con el id del examen asociado
+    $sql = "SELECT *
+            FROM preguntas
+            WHERE id_examen = '$id_exam';"; 
+
+    $result = mysqli_query($conexion, $sql);
+    // Guardamos como array asociativo las preguntas para operar con ellas luego
+    $preguntas = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    foreach ($preguntas as $pregunta) {
+        echo "<div class='pregunta'>"; // Por cada pregunta escribimos su título
+        echo "<label id='campos'>" . $pregunta['titulo'] . "</label><br><br><br>";
+
+        // Y hacemos una consulta que recoja las respuestas a esas preguntas del cuestionario
+        $id_preg = $pregunta['id_preg'];
+        $sql_resp = "SELECT * FROM cuestionario WHERE id_preg = $id_preg AND id_alumno = '$alumno'";
+        $result_resp = mysqli_query($conexion, $sql_resp);
+        $cuestionario = mysqli_fetch_all($result_resp, MYSQLI_ASSOC);
+
+        if (count($cuestionario) > 0) {
+            foreach ($cuestionario as $item) {
+                $correcta = $item['correcta'];
+                echo "<div class='respuesta' data-correcta='$correcta'>";
+                echo "<table>";
+                echo "<tr>";
+                echo "<td rowspan='2'>" . $item['respuesta'] . "</td>";
+                echo "</tr>";
+                echo "</table>";
+                echo "</div><br><br>";
+            }
+        }
+        echo "</div><br><hr><br>";
+    }
+}
 ?>

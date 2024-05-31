@@ -17,6 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_query($conexion, $sql_update);
     }
 
-    echo "Correcciones guardadas exitosamente.";
+    header('Location: ../web/listadoprofe.php?success=true&matricula='. $_SESSION["matricula"] . '');
 }
 ?>
