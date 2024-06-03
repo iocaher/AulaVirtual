@@ -45,7 +45,7 @@ require '../procesos/dbcon.php';
                     </div>
 
                     <input type="submit" value="Registrarme">
-                    <a href="../index.php"> Ya estoy registrado </a>
+                    <a href="login.php"> Ya estoy registrado </a>
                 </form>
             </div>
         </div>
