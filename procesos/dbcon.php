@@ -316,7 +316,7 @@ function listadoExamenes($asignatura) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<div>';
             echo '<input type="radio" id="exam_' . $row['id_exam'] . '" name="id_exam" value="' . $row['id_exam'] . '">';
-            echo '<label for="exam_' . $row['id_exam'] . '">' . $row['nombre'] . '</label>';
+            echo '<label id="campos" for="exam_' . $row['id_exam'] . '">' . $row['nombre'] . '</label>';
             echo '<input type="hidden" name="nombre_exam" value="' . $row['nombre'] . '">';
             echo '</div>';
         }
@@ -618,5 +618,98 @@ function examenConsultar($alumno, $id_exam) {
         }
         echo "</div><br><hr><br>";
     }
+}
+
+
+function plantillaPerfil($user, $tipo) {
+    
+    $conexion = conexionBD();
+
+    if($tipo == 'alumno'){
+
+        $sql = "SELECT  ID, nombre, apellidos, email, DNI, telefono, nacimiento, codigo_postal, direccion, ciudad, provincia 
+                FROM alumnos
+                WHERE ID = '$user';"; 
+    }
+    else {
+
+        $sql = "SELECT  ID, nombre, apellidos, email, DNI, telefono, nacimiento, codigo_postal, direccion, ciudad, provincia 
+                FROM alumnos
+                WHERE ID = '$user';"; 
+    }
+
+    $result = mysqli_query($conexion, $sql);
+    
+    if (mysqli_num_rows($result) > 0) {
+        // Obtener los datos del usuario
+        $row = mysqli_fetch_assoc($result);
+
+        $id = $row['ID'];
+        $nombre = $row['nombre'];
+        $apellidos = $row['apellidos'];
+        $email = $row['email'];
+        $dni = $row['DNI'];
+        $telefono = $row['telefono'];
+        $nacimiento = $row['nacimiento'];
+        $codigo_postal = $row['codigo_postal'];
+        $direccion = $row['direccion'];
+        $ciudad = $row['ciudad'];
+        $provincia = $row['provincia'];
+
+    } else {
+    }
+
+    if (isset($_GET['edit']) && $_GET['edit'] == 'true') {
+
+        echo '<div class="profile">
+
+                <h1 align="center">Perfil de ' . $id . '</h1>
+
+                    <div class="infoextr">
+            
+                        <form action="../procesos/editar_perfil.php" method="post" class="editable" >
+
+                                <label id="campos" for="id">ID:</label><input type="text" id="id" name="id" value="' . $id . '" readonly><br><br>
+                                <label id="campos" for="name">Nombre:</label><input type="text" id="name" name="name" value="' . $nombre . '"><br><br>
+                                <label id="campos" for="surname">Apellidos:</label><input type="text" id="surname" name="surname" value="' . $apellidos . '"><br><br>
+                                <label id="campos" for="email">Email:</label><input type="email" id="email" name="email" value="' . $email . '"><br><br>
+                                <label id="campos" for="dni">DNI:</label><input type="text" id="dni" name="dni" value="' . $dni . '"><br><br>
+                                <label id="campos" for="phone">Teléfono:</label><input type="text" id="phone" name="phone" value="' . $telefono . '"><br><br>
+                                <label id="campos" for="birthdate">Nacimiento:</label><input type="date" id="birthdate" name="birthdate" value="' . $nacimiento . '"><br><br>
+                                <label id="campos" for="postalcode">Código Postal:</label><input type="text" id="postalcode" name="postalcode" value="' . $codigo_postal . '"><br><br>
+                                <label id="campos" for="address">Dirección:</label><input type="text" id="address" name="address" value="' . $direccion . '"><br><br>
+                                <label id="campos" for="city">Ciudad:</label><input type="text" id="city" name="city" value="' . $ciudad . '"><br><br>
+                                <label id="campos" for="province">Provincia:</label><input type="text" id="province" name="province" value="' . $provincia . '"><br><br>
+                                <input type="submit" value="Guardar" id="guardar" >
+                                <a href="../index.php"> Volver </a>
+                            </form>';
+    }
+    else {
+
+    echo '<div class="profile">
+
+                <h1 align="center">Perfil de ' . $id . '</h1>
+
+                    <div class="infoextr">
+                    
+                    <label id="campos" class="noEditable"><strong>Nombre:</strong> <span id="name-value">' . $nombre . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Apellidos:</strong> <span id="surname-value">' . $apellidos . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Email:</strong> <span id="email-value">' . $email . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>DNI:</strong> <span id="dni-value">' . $dni . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Teléfono:</strong> <span id="phone-value">' . $telefono . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Nacimiento:</strong> <span id="birthdate-value">' . $nacimiento . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Código Postal:</strong> <span id="postalcode-value">' . $codigo_postal . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Dirección:</strong> <span id="address-value">' . $direccion . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Ciudad:</strong> <span id="city-value">' . $ciudad . '</span></label><br><br>
+                    <label id="campos" class="noEditable"><strong>Provincia:</strong> <span id="province-value">' . $provincia . '</span></label><br><br>
+                
+                
+                    <br><a href="informacion.php?edit=true" id="editar" > Editar perfil</a>
+                    <a href="../index.php"> Volver </a>
+                    ';
+                            
+    }
+
+    echo '</div></div>';
 }
 ?>
