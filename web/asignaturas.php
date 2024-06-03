@@ -62,30 +62,27 @@
                             }
                         }
                     
-                    else {
-
-                    }
-                
-                    echo listadoAsignaturasP() .'
-
-                        <H2> ¿Quieres impartir otra asignatura más? </H2>
-                        <form action="#" method="POST">
-
-                        <label id="campos"> Nombre de la asignatura </label>
-                        <input type="text" name="Asignatura" placeholder="Asignatura" required><br><br>
-
-                        <input type="submit" value="Comenzar">
-                        <a href="../index.php"> Volver </a>
-                        </form>';
-
-                        if (isset($_POST['Asignatura'])) {
-
-                            crearAsignatura($_POST['Asignatura']);
-                        }
                         else {
-                            
-                        }
+                            echo listadoAsignaturasP() .'
 
+                            <H2> ¿Quieres impartir otra asignatura más? </H2>
+                            <form action="#" method="POST">
+
+                            <label id="campos"> Nombre de la asignatura </label>
+                            <input type="text" name="Asignatura" placeholder="Asignatura" required><br><br>
+
+                            <input type="submit" value="Comenzar">
+                            <a href="../index.php"> Volver </a>
+                            </form>';
+
+                            if (isset($_POST['Asignatura'])) {
+
+                                crearAsignatura($_POST['Asignatura']);
+                            }
+                            else {
+                                
+                            }
+                        }
                     }
                 }
                 else {

@@ -55,7 +55,6 @@ function addTestOption(questionId) {
     optionBlock.innerHTML = `
         <label>Opción ${optionCount}: </label>
         <input type="text" name="preguntas[${questionId}][opciones][${optionCount}][texto]" required>
-        <input type="checkbox" name="preguntas[${questionId}][opciones][${optionCount}][correcta]"> Correcta
         <br>
     `;
 

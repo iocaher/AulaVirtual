@@ -76,7 +76,7 @@
                 }
             
                 echo listadoAsignaturasPC();
-                echo '<a href="../index.php"> Volver </a>';
+                
                     
 
 

@@ -120,19 +120,6 @@ a {
     word-wrap: break-word
 }
 
-.infoextr {
-    background-color: rgb(255, 255, 255);
-    border-radius: 15px;
-    padding-top: 15px;
-    padding-right: 50px;
-    padding-left: 55px;
-    padding-bottom: 30px;
-    width: 380px;
-    border: 2px hidden #f1f2f4;
-    box-sizing: border-box;
-    word-wrap: break-word
-}
-
 .errlog {
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
@@ -245,6 +232,19 @@ a {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas */
+    gap: 10px; /* Espacio entre los botones */
+}
+
+.columna1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.columna2 {
+    display: flex;
+    flex-direction: column;
 }
 
 .botones a, a{
@@ -303,8 +303,11 @@ input[type=submit] {
 
 #logout {
 margin-left: 25px ;
+
 padding-right: 24px;
 padding-left: 24px;
+max-width: calc(58% - 10px);
+padding-bottom: 48px;
 }
 
 #vuelvan {
@@ -331,8 +334,9 @@ span {
 
 #examsel{
     padding-right: 29px;
-    padding-left: 29px;
-    
+    padding-left: 20px;
+    max-width: calc(75% - 10px);
+    padding-bottom: 30px;
 }
 
 .boton {
@@ -385,4 +389,83 @@ span {
 
 .table-form input[type="radio"] {
     margin-right: 10px;
+}
+
+.infoextr {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 15px 50px 30px 55px;
+    width: auto; /* Cambiado de 380px a auto para permitir expansión */
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Dos columnas: etiquetas y campos */
+    gap: 10px 20px; /* Espacio entre filas y columnas */
+}
+
+.profile-grid label {
+    grid-column: 1 / 2; /* Primera columna */
+    align-self: center;
+    color: #646363;
+    font-weight: bold;
+}
+
+.profile-grid span {
+    grid-column: 2 / 3; /* Segunda columna */
+    align-self: center;
+    color: #646363;
+}
+
+.infoextr a {
+    margin-right: 10px; /* Espaciado a la derecha */
+}
+
+#editar {
+    margin-right: 10px; /* Espaciado a la derecha */
+    white-space: nowrap;
+    padding-bottom: 30px;
+    max-width: calc(100% - 10px);
+}
+
+#volver {
+    margin-right: 10px; /* Espaciado a la derecha */
+    margin-left: 50px;
+    white-space: nowrap;
+    padding-bottom: 30px;
+    max-width: calc(35% - 10px);
+}
+
+.edit {
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 15px 50px 30px 55px;
+    width: auto; /* Cambiado de 380px a auto para permitir expansión */
+    border: 2px hidden #f1f2f4;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    display: grid;
+    grid-template-columns: 1fr 3fr; /* Dos columnas: etiquetas y campos */
+    gap: 10px 20px; /* Espacio entre filas y columnas */
+}
+
+.profile-grid input {
+    grid-column: 2;
+}
+
+.profile-grid input[type="submit"] {
+    grid-column: 1;
+}
+
+#consult {
+    text-align: center;
+    max-width: calc(75% - 10px);
+    padding-bottom: 48px;
+}
+
+#perfil{
+    padding-right: 29px;
+    padding-left: 20px;
+    max-width: calc(75% - 10px);
+    padding-bottom: 30px;
 }

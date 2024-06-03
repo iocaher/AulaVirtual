@@ -445,7 +445,7 @@ function examenCorregir($alumno, $id_exam) {
 function listadoAsignaturasPC() {
 
 
-    echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas que imparte </H2>";
+    
     $conexion = conexionBD();
 
     $sql = "SELECT id, nombre 
@@ -454,21 +454,26 @@ function listadoAsignaturasPC() {
 
     $result = mysqli_query($conexion, $sql);
 
-    //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
-    $lineaDeBotones = '<p>';
+    if(mysqli_num_rows($result) >= 1) {
 
-    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
-    while ($row = mysqli_fetch_assoc($result)) {
-        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
-        $url = 'listadoprofe.php?matricula=' . $row['id'];
-        //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
-        //Será el nombre de la asignatura recogida anteriormente.
-        $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+        echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas que imparte </H2>";
+        //Inicializamos la etiqueta para que se ordenen en fila en ese contenedor
+        $lineaDeBotones = '<p>';
+
+        // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+        while ($row = mysqli_fetch_assoc($result)) {
+            //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
+            $url = 'listadoprofe.php?matricula=' . $row['id'];
+            //Escribimos la etiqueta para que cada botón rediriga a la URL especificada arriba, y como nombre visible de este botón
+            //Será el nombre de la asignatura recogida anteriormente.
+            $lineaDeBotones .= '<a href="' . $url . '">' . $row['nombre'] . '</a><br><br><br>';
+        }
+        //Y cerramos el contenedor del botón.
+        $lineaDeBotones .= '</p><br>';
+
+        echo $lineaDeBotones;
+        echo '<a href="../index.php"> Volver </a>';
     }
-    //Y cerramos el contenedor del botón.
-    $lineaDeBotones .= '</p><br>';
-
-    echo $lineaDeBotones;
 }
 
 function listadoExamenesRealizados($asignatura) {
@@ -620,7 +625,6 @@ function examenConsultar($alumno, $id_exam) {
     }
 }
 
-
 function plantillaPerfil($user, $tipo) {
     
     $conexion = conexionBD();
@@ -634,7 +638,7 @@ function plantillaPerfil($user, $tipo) {
     else {
 
         $sql = "SELECT  ID, nombre, apellidos, email, DNI, telefono, nacimiento, codigo_postal, direccion, ciudad, provincia 
-                FROM alumnos
+                FROM profesores
                 WHERE ID = '$user';"; 
     }
 
@@ -662,54 +666,48 @@ function plantillaPerfil($user, $tipo) {
     if (isset($_GET['edit']) && $_GET['edit'] == 'true') {
 
         echo '<div class="profile">
-
                 <h1 align="center">Perfil de ' . $id . '</h1>
-
-                    <div class="infoextr">
-            
-                        <form action="../procesos/editar_perfil.php" method="post" class="editable" >
-
-                                <label id="campos" for="id">ID:</label><input type="text" id="id" name="id" value="' . $id . '" readonly><br><br>
-                                <label id="campos" for="name">Nombre:</label><input type="text" id="name" name="name" value="' . $nombre . '"><br><br>
-                                <label id="campos" for="surname">Apellidos:</label><input type="text" id="surname" name="surname" value="' . $apellidos . '"><br><br>
-                                <label id="campos" for="email">Email:</label><input type="email" id="email" name="email" value="' . $email . '"><br><br>
-                                <label id="campos" for="dni">DNI:</label><input type="text" id="dni" name="dni" value="' . $dni . '"><br><br>
-                                <label id="campos" for="phone">Teléfono:</label><input type="text" id="phone" name="phone" value="' . $telefono . '"><br><br>
-                                <label id="campos" for="birthdate">Nacimiento:</label><input type="date" id="birthdate" name="birthdate" value="' . $nacimiento . '"><br><br>
-                                <label id="campos" for="postalcode">Código Postal:</label><input type="text" id="postalcode" name="postalcode" value="' . $codigo_postal . '"><br><br>
-                                <label id="campos" for="address">Dirección:</label><input type="text" id="address" name="address" value="' . $direccion . '"><br><br>
-                                <label id="campos" for="city">Ciudad:</label><input type="text" id="city" name="city" value="' . $ciudad . '"><br><br>
-                                <label id="campos" for="province">Provincia:</label><input type="text" id="province" name="province" value="' . $provincia . '"><br><br>
-                                <input type="submit" value="Guardar" id="guardar" >
-                                <a href="../index.php"> Volver </a>
-                            </form>';
+                <form action="../procesos/editar_perfil.php" method="post" class="editable">
+                <div class="infoextr profile-grid">
+                    
+                        <label for="name">Nombre: </label><input type="text" id="name" name="name" value="' . $nombre . '" required>
+                        <label for="surname">Apellidos: </label><input type="text" id="surname" name="surname" value="' . $apellidos . '" required>
+                        <label for="email">Email: </label><input type="email" id="email" name="email" value="' . $email . '" required>
+                        <label for="dni">DNI: </label><input type="text" id="dni" name="dni" value="' . $dni . '" required>
+                        <label for="phone">Teléfono: </label><input type="text" id="phone" name="phone" value="' . $telefono . '" required>
+                        <label for="birthdate">Nacimiento: </label><input type="date" id="birthdate" name="birthdate" value="' . $nacimiento . '" required>
+                        <label for="postalcode">Código Postal: </label><input type="text" id="postalcode" name="postalcode" value="' . $codigo_postal . '" required>
+                        <label for="address">Dirección: </label><input type="text" id="address" name="address" value="' . $direccion . '" required>
+                        <label for="city">Ciudad: </label><input type="text" id="city" name="city" value="' . $ciudad . '" required>
+                        <label for="province">Provincia: </label><input type="text" id="province" name="province" value="' . $provincia . '" required>
+                        <input type="submit" value="Guardar" id="guardar">
+                        <a id="volver" href="../index.php"> Volver </a>
+                    
+                </div>
+                </form>
+            </div>';
     }
     else {
 
-    echo '<div class="profile">
-
-                <h1 align="center">Perfil de ' . $id . '</h1>
-
-                    <div class="infoextr">
-                    
-                    <label id="campos" class="noEditable"><strong>Nombre:</strong> <span id="name-value">' . $nombre . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Apellidos:</strong> <span id="surname-value">' . $apellidos . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Email:</strong> <span id="email-value">' . $email . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>DNI:</strong> <span id="dni-value">' . $dni . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Teléfono:</strong> <span id="phone-value">' . $telefono . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Nacimiento:</strong> <span id="birthdate-value">' . $nacimiento . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Código Postal:</strong> <span id="postalcode-value">' . $codigo_postal . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Dirección:</strong> <span id="address-value">' . $direccion . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Ciudad:</strong> <span id="city-value">' . $ciudad . '</span></label><br><br>
-                    <label id="campos" class="noEditable"><strong>Provincia:</strong> <span id="province-value">' . $provincia . '</span></label><br><br>
-                
-                
-                    <br><a href="informacion.php?edit=true" id="editar" > Editar perfil</a>
-                    <a href="../index.php"> Volver </a>
-                    ';
+        echo '<div class="profile">
+        <h1 align="center">Perfil de ' . $id . '</h1>
+        <div class="infoextr profile-grid">
+            <label><strong>Nombre:</strong></label><span id="name-value">' . $nombre . '</span>
+            <label><strong>Apellidos:</strong></label><span id="surname-value">' . $apellidos . '</span>
+            <label><strong>Email:</strong></label><span id="email-value">' . $email . '</span>
+            <label><strong>DNI:</strong></label><span id="dni-value">' . $dni . '</span>
+            <label><strong>Teléfono:</strong></label><span id="phone-value">' . $telefono . '</span>
+            <label><strong>Nacimiento:</strong></label><span id="birthdate-value">' . $nacimiento . '</span>
+            <label><strong>Código Postal:</strong></label><span id="postalcode-value">' . $codigo_postal . '</span>
+            <label><strong>Dirección:</strong></label><span id="address-value">' . $direccion . '</span>
+            <label><strong>Ciudad:</strong></label><span id="city-value">' . $ciudad . '</span>
+            <label><strong>Provincia:</strong></label><span id="province-value">' . $provincia . '</span>
+            <a href="informacion.php?edit=true" id="editar">Editar perfil</a>
+            <a href="../index.php" id="volver"> Volver </a>
+        </div>
+    </div>';
                             
     }
 
-    echo '</div></div>';
 }
 ?>

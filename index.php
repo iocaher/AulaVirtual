@@ -18,15 +18,15 @@ echo '<html>
         <div class="PaginaUsu">
             <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>           
             <div class=botones>
-
-                    <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
-
-                    <a href="web/listadoalum.php"> Consultar notas </a> </p><br>
-
-
-                    <p> <a href="web/informacion.php"> Información </a>
-                    
-                        <a id="logout" href="web/login.php"> Cerrar sesión </a> </p>
+                <div class="columna1">
+                    <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
+                    <a id="consult" href="web/listadoalum.php"> Consultar notas </a>
+                </div>
+                <div class="columna2">
+                        <a id="perfil" href="web/informacion.php"> Información </a>
+                        <a id="logout" href="web/login.php"> Cerrar sesión </a>
+                </div>
+            </div>
         </div>
     </div>    
     </body>
@@ -47,13 +47,15 @@ else if ($rol == 'profesor') {
             <div class="PaginaUsu">
                 <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>
                 <div class=botones>
-                    <p> <a id="examsel" href="web/asignaturas.php"> Asignaturas </a> <span id="spanpag"></span>
-    
-                    <a href="web/listadoprofe.php"> Corregir examenes </a> </p><br>
-    
-    
-                    <p> <a href="web/informacion.php"> Información </a>
-                    <a id="logout" href="web/login.php"> Cerrar sesión </a> </p>
+                    <div class="columna1">
+                        <a id="examsel" href="web/asignaturas.php"> Asignaturas </a>
+                        <a id="consult" href="web/listadoprofe.php"> Corregir examenes </a>
+                        
+                    </div>
+                    <div class="columna2">
+                        <a id="perfil" href="web/informacion.php"> Información </a>
+                        <a id="logout" href="web/login.php"> Cerrar sesión </a>
+                    </div>
                 </div>
             </div>
         </div>
