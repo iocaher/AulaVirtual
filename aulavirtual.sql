@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2024 a las 15:26:32
+-- Tiempo de generación: 03-06-2024 a las 19:17:40
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.3
 
@@ -31,15 +31,15 @@ CREATE TABLE `alumnos` (
   `ID` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
   `apellidos` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_spanish_ci NOT NULL
+  `email` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `DNI` varchar(9) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `telefono` int(9) DEFAULT NULL,
+  `nacimiento` date DEFAULT NULL,
+  `codigo_postal` int(5) DEFAULT NULL,
+  `direccion` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `ciudad` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `provincia` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `alumnos`
---
-
-INSERT INTO `alumnos` (`ID`, `nombre`, `apellidos`, `email`) VALUES
-('ivan', NULL, NULL, 'ivan@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -53,13 +53,6 @@ CREATE TABLE `asignaturas` (
   `usuario` varchar(7) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `asignaturas`
---
-
-INSERT INTO `asignaturas` (`id`, `nombre`, `usuario`) VALUES
-(3, 'Desarrollo Web Servidor', 'juan');
-
 -- --------------------------------------------------------
 
 --
@@ -72,15 +65,6 @@ CREATE TABLE `cuestionario` (
   `respuesta` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
   `correcta` varchar(2) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `cuestionario`
---
-
-INSERT INTO `cuestionario` (`id_alumno`, `id_preg`, `respuesta`, `correcta`) VALUES
-('ivan', 5, 'cinco', 'NO'),
-('ivan', 6, 'gatito', 'NO'),
-('ivan', 7, 'reptil', 'SI');
 
 --
 -- Disparadores `cuestionario`
@@ -148,13 +132,6 @@ CREATE TABLE `examenes` (
   `id_asig` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `examenes`
---
-
-INSERT INTO `examenes` (`id_exam`, `nombre`, `num_preg`, `realizados`, `id_asig`) VALUES
-(12, 'Examen Trimestral 3', NULL, NULL, 3);
-
 -- --------------------------------------------------------
 
 --
@@ -166,13 +143,6 @@ CREATE TABLE `matricula` (
   `id_asig` int(10) NOT NULL,
   `curso` year(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `matricula`
---
-
-INSERT INTO `matricula` (`id_alumno`, `id_asig`, `curso`) VALUES
-('ivan', 3, 2024);
 
 -- --------------------------------------------------------
 
@@ -186,13 +156,6 @@ CREATE TABLE `notas` (
   `nota` int(2) DEFAULT NULL,
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `notas`
---
-
-INSERT INTO `notas` (`id_alumno`, `id_exam`, `nota`, `fecha`) VALUES
-('ivan', 12, 1, '2024-05-28');
 
 --
 -- Disparadores `notas`
@@ -240,15 +203,6 @@ CREATE TABLE `preguntas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 --
--- Volcado de datos para la tabla `preguntas`
---
-
-INSERT INTO `preguntas` (`id_examen`, `id_preg`, `titulo`) VALUES
-(12, 5, '2+2'),
-(12, 6, 'perrito'),
-(12, 7, 'Camaleon');
-
---
 -- Disparadores `preguntas`
 --
 DELIMITER $$
@@ -278,15 +232,15 @@ CREATE TABLE `profesores` (
   `ID` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
   `nombre` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
   `apellidos` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL
+  `email` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `DNI` varchar(9) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `telefono` int(9) DEFAULT NULL,
+  `nacimiento` date DEFAULT NULL,
+  `codigo_postal` int(5) DEFAULT NULL,
+  `direccion` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `ciudad` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `provincia` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `profesores`
---
-
-INSERT INTO `profesores` (`ID`, `nombre`, `apellidos`, `email`) VALUES
-('Juan', NULL, NULL, 'juangago@kursaal.com');
 
 -- --------------------------------------------------------
 
@@ -300,16 +254,6 @@ CREATE TABLE `respuestas` (
   `respuesta` varchar(255) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `respuestas`
---
-
-INSERT INTO `respuestas` (`id_preg`, `id_resp`, `respuesta`) VALUES
-(5, 3, 'cinco'),
-(5, 4, 'cuatro'),
-(7, 5, 'reptil'),
-(7, 6, 'ave');
-
 -- --------------------------------------------------------
 
 --
@@ -322,14 +266,6 @@ CREATE TABLE `usuarios` (
   `contraseña` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
   `rol` varchar(10) COLLATE utf8_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`ID`, `email`, `contraseña`, `rol`) VALUES
-('ivan', 'ivan@gmail.com', '1234', 'alumno'),
-('Juan', 'juangago@kursaal.com', '12345', 'profesor');
 
 --
 -- Disparadores `usuarios`
@@ -426,25 +362,25 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `asignaturas`
 --
 ALTER TABLE `asignaturas`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `examenes`
 --
 ALTER TABLE `examenes`
-  MODIFY `id_exam` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_exam` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id_preg` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_preg` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id_resp` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_resp` int(100) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
