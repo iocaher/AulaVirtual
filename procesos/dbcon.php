@@ -483,7 +483,7 @@ function listadoExamenesRealizados($asignatura) {
 
     if($_SESSION['tipo'] == 'profesor')
     {
-        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
+        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre, examenes.num_preg 
         FROM notas
         LEFT JOIN examenes ON notas.id_exam = examenes.id_exam
         WHERE examenes.id_asig = $asignatura";  
@@ -499,12 +499,13 @@ function listadoExamenesRealizados($asignatura) {
             $id_alumno = $row['id_alumno'];
             $nombre = $row['nombre'];
             $nota = $row['nota'];
+            $num_preg = $row['num_preg'];
 
             $formulario .= '<tr>';
             $formulario .= '<td><input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '"></td>';
             $formulario .= '<td>' . $nombre . '</td>';
             $formulario .= '<td>' . $id_alumno . '</td>';
-            $formulario .= '<td>' . $nota . '</td>';
+            $formulario .= '<td>' . $nota . '/' . $num_preg . '</td>';
             $formulario .= '</tr>';
         }
 
@@ -513,7 +514,7 @@ function listadoExamenesRealizados($asignatura) {
         echo $formulario;
     }
     else {
-        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre 
+        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre, examenes.num_preg 
         FROM notas
         LEFT JOIN examenes ON notas.id_exam = examenes.id_exam AND notas.id_alumno = '$alumno'
         WHERE examenes.id_asig = $asignatura";  
@@ -529,6 +530,7 @@ function listadoExamenesRealizados($asignatura) {
             $id_alumno = $row['id_alumno'];
             $nombre = $row['nombre'];
             $nota = $row['nota'];
+            $num_preg = $row['num_preg'];
 
             $formulario .= '<tr>';
             if($nota != null) {
@@ -539,7 +541,7 @@ function listadoExamenesRealizados($asignatura) {
             }
             $formulario .= '<td>' . $nombre . '</td>';
             $formulario .= '<td>' . $id_alumno . '</td>';
-            $formulario .= '<td>' . $nota . '</td>';
+            $formulario .= '<td>' . $nota . '/' . $num_preg . '</td>';
             $formulario .= '</tr>';
         }
 
