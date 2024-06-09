@@ -63,7 +63,13 @@ else if ($rol == 'profesor') {
     </html>';
 }
 else {
-    
-    header('location:web/login.php?success=false');
+
+    if (isset($_GET['login']) && $_GET['login'] == 'false') {
+        header('location:web/login.php?success=false');
+    }
+    else {
+        header('location:web/login.php');
+    }
+
 }
 ?>

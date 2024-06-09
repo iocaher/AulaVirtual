@@ -20,11 +20,11 @@ require '../procesos/dbcon.php';
 
         <div class="container">
             <div class="login">
-                <H1> Conectarse </H1>
+                <H1> Iniciar Sesión </H1>
                 <form id="formulario" action="#" method="POST">
 
                 <?php if (isset($_GET['success']) && $_GET['success'] == 'false') {
-                echo '<div class="success-message"><span>&#10004;</span> Usuario incorrecto </div>'; } ?>
+                echo '<div class="success-message"> &#9747; Usuario o contraseña incorrecta </div><br>'; } ?>
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
                     <input type="text" name="Usuario" placeholder="usuario" size="28" required><br><br>
@@ -45,6 +45,7 @@ require '../procesos/dbcon.php';
     if (isset($_POST['Usuario'])) {
 
         login($_POST['Usuario'], null, $_POST['secreto'], null);
+        
     }
 
 ?>

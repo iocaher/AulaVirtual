@@ -11,7 +11,7 @@ function anadirPregunta() {
 
     // Añadir el HTML para la nueva pregunta
     questionBlock.innerHTML = `
-        <div class="formulario">
+        <div >
             <label id="campos">Pregunta ${questionCount}: </label>
             <input type="text" name="preguntas[${questionCount}][texto]" required>
             <br>
@@ -19,12 +19,14 @@ function anadirPregunta() {
             <input type="radio" name="preguntas[${questionCount}][tipo]" value="test" onclick="showTestOptions(${questionCount})" required> Test
             <input type="radio" name="preguntas[${questionCount}][tipo]" value="desarrollo" onclick="showTestOptions(${questionCount})" required> Desarrollo
             <div id="test-options-${questionCount}" class="test-options" style="display: none;">
+            <br>
+                <div class="test-options-container" id="test-options-container-${questionCount}"></div><br>
                 <button type="button" onclick="addTestOption(${questionCount})">Añadir opción</button>
-                <div class="test-options-container" id="test-options-container-${questionCount}"></div>
+
             </div>
             <br>
             <button type="button" class="remove-question" onclick="removeQuestion(${questionCount})">Eliminar Pregunta</button>
-        </div>
+        </div><br>
     `;
 
     // Añadir el nuevo bloque de pregunta al contenedor

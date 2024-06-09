@@ -40,7 +40,7 @@ function login($usuario, $email, $pass, $tipo) {
     $result = mysqli_query($conexion, $sql);
 
     //Si el resultado da alguna coincidencia, se crea la variable de sesion del usuario y se redirige a la pagina principal
-    if ($result) {
+    if (mysqli_num_rows($result) >= 1) {
         $_SESSION['usuario'] = $usuario;
 
         $fila = mysqli_fetch_assoc($result);
@@ -52,7 +52,7 @@ function login($usuario, $email, $pass, $tipo) {
     }
     //Si no, devuelve a la pagina principal sin mas
     else {
-        header("Location: ../index.php");    
+        header("Location: ../index.php?login=false");    
     }
 
     }
@@ -680,8 +680,8 @@ function plantillaPerfil($user, $tipo) {
                         <label for="address">Dirección: </label><input type="text" id="address" name="address" value="' . $direccion . '" required>
                         <label for="city">Ciudad: </label><input type="text" id="city" name="city" value="' . $ciudad . '" required>
                         <label for="province">Provincia: </label><input type="text" id="province" name="province" value="' . $provincia . '" required>
-                        <input type="submit" value="Guardar" id="guardar">
-                        <a id="volver" href="../index.php"> Volver </a>
+                        <br><input type="submit" value="Guardar" id="guardar"> 
+                        <div align="right"> <a id="volver" href="informacion.php"> Volver </a> </div>
                     
                 </div>
                 </form>

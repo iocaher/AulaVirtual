@@ -112,6 +112,7 @@
                         else {
                             
                         }
+                        echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
                     }
                     else {
                         echo "<H2> Hola, " . $_SESSION['usuario'] . ", estas son las asignaturas en las que está matriculado </H2>";
