@@ -2,6 +2,7 @@
 
 session_start();
 
+//Función comodín que guardará los datos de la base de datos y enviará el resultado de la conexión a las diferentes funciones.
 function conexionBD() {
 
     $host="127.0.0.1";
@@ -23,6 +24,7 @@ function conexionBD() {
 
 }
 
+//Función que sirve para controlar el login y el registro dependiendo de los valores que pase.
 function login($usuario, $email, $pass, $tipo) {
 
     //Pasamos a la función los 3 datos del registro, y, si el email es null (ya que se inicia sesion con el usuario)
@@ -50,7 +52,7 @@ function login($usuario, $email, $pass, $tipo) {
 
         header("Location: ../index.php");
     }
-    //Si no, devuelve a la pagina principal sin mas
+    //Si no, devuelve a la pagina principal con un false.
     else {
         header("Location: ../index.php?login=false");    
     }
@@ -75,6 +77,7 @@ function login($usuario, $email, $pass, $tipo) {
 
 }
 
+//Función que devuelve true o false de la comprobación por si no existe ninguna asignatura para x profesor.
 function comprobarAsig($usuario) {
 
     $conexion = conexionBD();
@@ -94,6 +97,7 @@ function comprobarAsig($usuario) {
         }
 }
 
+//Función que sirve para crear la asignatura para un profesor en concreto.
 function crearAsignatura($nombre) {
     $conexion = conexionBD();
 
@@ -104,6 +108,7 @@ function crearAsignatura($nombre) {
     header('Location: asignaturas.php');
 }
 
+//Función que lista las asignaturas que pertenecen a un profesor
 function listadoAsignaturasP() {
 
 
@@ -133,6 +138,7 @@ function listadoAsignaturasP() {
     echo $lineaDeBotones;
 }
 
+//Función que comprueba que un alumno esté matriculado en asignaturas.
 function comprobarAsigAlum($usuario) {
 
     $conexion = conexionBD();
@@ -153,6 +159,7 @@ function comprobarAsigAlum($usuario) {
         }
 }
 
+//Función que muestra las asignaturas a un alumno en las que no esté matriculado
 function listadoAsignaturas() {
 
     $conexion = conexionBD();
@@ -217,6 +224,7 @@ function listadoAsignaturas() {
     }
 }
 
+//Función que muestra un listado de las asignaturas en las que sí esté matriculado el alumno
 function listadoAsignaturasA() {
 
     $conexion = conexionBD();
@@ -247,6 +255,7 @@ function listadoAsignaturasA() {
     echo $lineaDeBotones;
 }
 
+//Función que muestra la página de la asignatura, su profesor y los alumnos matriculados
 function listadoMatricula($asignatura) {
 
     $conexion = conexionBD();
@@ -280,13 +289,13 @@ function listadoMatricula($asignatura) {
         if(mysqli_num_rows($resul2) >= 1) {
             $consultaMatri = array();  // Inicializar el array antes de usarlo
             while ($row2 = mysqli_fetch_assoc($resul2)) {
-                $consultaMatri[] = $row2;
+                $consultaMatri[] = $row2; //Guardamos en el array los alumnos matriculados en la asignatura
             }
 
             echo '<div class="dropdown">
                     <a> Listado de Alumnos </a>
                     <div class="dropdown-content">';
-                    foreach($consultaMatri as $alumnado) {
+                    foreach($consultaMatri as $alumnado) { //Iteramos los alumnos que se encuentren en el desplegable del listado de alumnos.
                         echo "<p>" . $alumnado['id_alumno']. "</p>";
                     }
             echo '</div>
@@ -296,6 +305,7 @@ function listadoMatricula($asignatura) {
     
 }
 
+//Función que lista los examenes que no se han realizado por el alumno en sesión y los muestra en formulario para seleccionarlos.
 function listadoExamenes($asignatura) {
 
     $conexion = conexionBD();
@@ -328,6 +338,7 @@ function listadoExamenes($asignatura) {
 
 }
 
+//Función que despliega una plantilla del examen para que el alumno la rellene.
 function examenDesplegar() {
 
     $conexion = conexionBD();
@@ -344,7 +355,7 @@ function examenDesplegar() {
     //Guardamos como array asociativo las preguntas para operar con ellas luego
     $preguntas = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    foreach ($preguntas as $pregunta) {
+    foreach ($preguntas as $pregunta) { //Iteramos cada pregunta
         echo "<div>"; //Por cada pregunta escribimos su titulo
         echo "<label id='campos'>" . $pregunta['titulo'] . "</label><br><br><br>";
 
@@ -354,8 +365,8 @@ function examenDesplegar() {
         $result_resp = mysqli_query($conexion, $sql_resp);
         $respuestas = mysqli_fetch_all($result_resp, MYSQLI_ASSOC);
 
-        //Si la pregunta contiene 0 respuestas, significa que era una pregunta de desarrollo, y si tiene más, era una respuesta de
-        //seleccion tipo test.
+        /*Si la pregunta contiene 0 respuestas, significa que era una pregunta de desarrollo, y si tiene más, era una respuesta de
+        seleccion tipo test. */
         if (count($respuestas) > 0) {
             foreach ($respuestas as $respuesta) {
                 echo "<label id='radios'>";
@@ -373,6 +384,7 @@ function examenDesplegar() {
     
 }
 
+//Fnción que recoge el id del alumno y del examen y lo desplegará junto a una seleccion correcta o incorrecta para que los profesores los corrijan.
 function examenCorregir($alumno, $id_exam) {
     $conexion = conexionBD();
 
@@ -404,6 +416,7 @@ function examenCorregir($alumno, $id_exam) {
         $result_resp = mysqli_query($conexion, $sql_resp);
         $cuestionario = mysqli_fetch_all($result_resp, MYSQLI_ASSOC);
 
+        
         if (count($cuestionario) > 0) {
             foreach ($cuestionario as $item) {
                 echo "<div id='respuestas'>";
@@ -411,6 +424,7 @@ function examenCorregir($alumno, $id_exam) {
                 echo "<tr>";
                 echo "<td rowspan='2'>" . $item['respuesta'] . "</td>";
                 
+                //Por versión anterior no lo borraré por si acaso, pero no lo utilizamos
                 $correcto_checked = ($item['correcta'] == 'SI') ? 'checked' : '';
                 $incorrecto_checked = ($item['correcta'] == 'NO') ? 'checked' : '';
 
@@ -442,10 +456,10 @@ function examenCorregir($alumno, $id_exam) {
     echo "</form>";
 }
 
+//Función que muestra el listado de signaturas para el apartado de Corregir Examenes en profesores.
 function listadoAsignaturasPC() {
 
 
-    
     $conexion = conexionBD();
 
     $sql = "SELECT id, nombre 
@@ -476,6 +490,7 @@ function listadoAsignaturasPC() {
     }
 }
 
+//Función que muestra en una tabla los examenes realizados por los alumnos si existieran
 function listadoExamenesRealizados($asignatura) {
 
     $conexion = conexionBD();
@@ -551,6 +566,7 @@ function listadoExamenesRealizados($asignatura) {
     }
 }
 
+//Función que muesta el listado de asignaturas para el apartadi de Consultar Examenes en alumnos
 function listadoAsignaturasAC() {
 
     $conexion = conexionBD();
@@ -581,6 +597,7 @@ function listadoAsignaturasAC() {
     echo $lineaDeBotones;
 }
 
+//Función que  servirá para que los alumnos puedan visualizar su examen con sus respuestas.
 function examenConsultar($alumno, $id_exam) {
     
     $conexion = conexionBD();
@@ -627,6 +644,7 @@ function examenConsultar($alumno, $id_exam) {
     }
 }
 
+//Función que muestra los datos de los usuarios segun si son profesores o alumnos independientemente.
 function plantillaPerfil($user, $tipo) {
     
     $conexion = conexionBD();

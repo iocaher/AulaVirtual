@@ -3,6 +3,7 @@
 require 'dbcon.php';
 
 $conexion = conexionBD();
+
 $ID = $_SESSION['usuario'];
 $nombre = $_POST['name'];
 $apellidos = $_POST['surname'];
@@ -15,8 +16,8 @@ $direccion = $_POST['address'];
 $ciudad = $_POST['city'];
 $provincia = $_POST['province'];
 
-echo $nacimiento;
 
+//Condicion para controlar que se introduzca en alumno o en profesor los datos del formulario
 if ($_SESSION['tipo'] == 'alumno') {
 
     $sql = "UPDATE alumnos SET nombre='$nombre', apellidos='$apellidos', email='$email', DNI='$dni', telefono=$telefono, nacimiento='$nacimiento', codigo_postal=$codigo_postal, direccion='$direccion', ciudad='$ciudad', provincia='$provincia' WHERE ID='$ID'";

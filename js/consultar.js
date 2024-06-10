@@ -1,3 +1,5 @@
+
+//Evento que coloreará los contenedores de las respuestas segun si son correctas o no
 document.addEventListener('DOMContentLoaded', function() {
     var respuestas = document.querySelectorAll('.respuesta');
     respuestas.forEach(function(respuesta) {

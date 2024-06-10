@@ -12,6 +12,7 @@ if (!$conn) {
 
     $id_alumno = $_SESSION['usuario'];
 
+    //Por cada respuesta, insertaremos el id de la pregunta y el resultado de esa respuesta en nuestra tabla cuestionario.
     foreach ($_POST['respuesta'] as $id_preg => $respuesta) {
         $id_preg = mysqli_real_escape_string($conn, $id_preg);
         $respuesta = mysqli_real_escape_string($conn, $respuesta);

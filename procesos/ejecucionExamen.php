@@ -39,8 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         $texto_opcion = mysqli_real_escape_string($conn, $opcion['texto']);
 
-                        $correcta = isset($opcion['correcta']) ? 1 : 0;
-
                         // Insertar la opción de respuesta
                         $sql = "INSERT INTO respuestas (id_preg, respuesta) VALUES ('$id_preg', '$texto_opcion')";
                         mysqli_query($conn, $sql);

@@ -1,3 +1,5 @@
+
+//Función que añade las preguntas al pulsar el botón de añadir pregunta
 function anadirPregunta() {
 
     var preguntaNueva = document.getElementById('preguns');
@@ -9,7 +11,7 @@ function anadirPregunta() {
     questionBlock.className = 'question-block';
     questionBlock.id = `question-block-${questionCount}`;
 
-    // Añadir el HTML para la nueva pregunta
+    // Añadir el HTML para la nueva pregunta añadiendo el bloque numerico para controlar mejor los valores.
     questionBlock.innerHTML = `
         <div >
             <label id="campos">Pregunta ${questionCount}: </label>
@@ -33,6 +35,7 @@ function anadirPregunta() {
     preguntaNueva.appendChild(questionBlock);
 }
 
+//Función que mostrará las distintas configuraciones de las preguntas tipo test y las de desarrollo en funcion de lo que se elija en el formulario
 function showTestOptions(questionId) {
     const testOptionsDiv = document.getElementById(`test-options-${questionId}`);
     const radioValue = document.querySelector(`input[name="preguntas[${questionId}][tipo]"]:checked`).value;
@@ -45,6 +48,7 @@ function showTestOptions(questionId) {
     }
 }
 
+// función para añadir opciones si es un tipo test.
 function addTestOption(questionId) {
     const optionsContainer = document.getElementById(`test-options-container-${questionId}`);
     const optionCount = optionsContainer.children.length + 1;
