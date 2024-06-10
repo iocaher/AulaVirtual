@@ -10,7 +10,6 @@ require '../procesos/dbcon.php';
     <head>
         <title> Registro </title>
         <link rel="stylesheet" href="../css/estilos.css?v=1.0">
-        
     </head>
 
     <body>
@@ -23,13 +22,13 @@ require '../procesos/dbcon.php';
                 <form id="registro" action="#" method="POST">
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
-                    <input type="text" name="Usuario" placeholder="usuario" size="35" maxlength="20" required><br><br>
+                    <input type="text" name="Usuario" placeholder="usuario" size="35" maxlength="7" required><br><br>
 
                     <label id="campos"> Email </label> <BR>
-                    <input type="text" name="email" placeholder="email" size="35" maxlength="20" required><br><br>
+                    <input type="text" id="email" name="email" placeholder="email" size="35" maxlength="255" required><br><br>
 
                     <label id="campos"> Contraseña </label><br>
-                    <input type="password" name="secreto" size="35" maxlength="20" required><br><br>
+                    <input type="password" name="secreto" size="35" maxlength="30" required><br><br>
 
                     <label id="campos"> Tipo de usuario </label><br><br>
                     <input type="radio" id='rol_profesor' name="rol" value="profesor" checked>
@@ -49,9 +48,9 @@ require '../procesos/dbcon.php';
                 </form>
             </div>
         </div>
-
         <script src="../js/registro.js"> </script>
     </body>
+    
 </html>
 
 <?php

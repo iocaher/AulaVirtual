@@ -62,6 +62,35 @@ else if ($rol == 'profesor') {
         </body>
     </html>';
 }
+else if ($rol == 'admin') {
+
+    echo '<html>
+    <meta charset="UTF-8">
+    <head>
+            <title> Página del Profesor </title>
+            <link rel="stylesheet" href="css/estilos.css?v=1.0">
+        </head>
+    
+        <body>
+        <div class="container">
+            <div class="PaginaUsu">
+                <H2> Hola, ' . $_SESSION["usuario"] . ': ¿qué desea hacer? </H2> <br>
+                <div class=botones>
+                    <div class="columna1">
+                        <a id="examsel" href="web/asignaturas.php"> Asignaturas </a>
+                        <a id="examADMIN" href="web/listadoadmin.php"> Exámenes </a>
+                        
+                    </div>
+                    <div class="columna2">
+                        <a id="perfilADMIN" href="web/perfiles.php"> Perfiles </a>
+                        <a id="logout" href="web/login.php"> Cerrar sesión </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </body>
+    </html>';
+}
 else {
 
     if (isset($_GET['login']) && $_GET['login'] == 'false') {

@@ -14,6 +14,7 @@ require '../procesos/dbcon.php';
     <head>
         <title> Conectarse </title>
         <link rel="stylesheet" href="../css/estilos.css?v=1.0">
+        
     </head>
 
     <body>

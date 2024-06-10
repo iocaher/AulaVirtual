@@ -528,7 +528,7 @@ function listadoExamenesRealizados($asignatura) {
 
         echo $formulario;
     }
-    else {
+    else if($_SESSION['tipo'] == 'alumno'){
         $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre, examenes.num_preg 
         FROM notas
         LEFT JOIN examenes ON notas.id_exam = examenes.id_exam AND notas.id_alumno = '$alumno'
@@ -556,13 +556,78 @@ function listadoExamenesRealizados($asignatura) {
             }
             $formulario .= '<td>' . $nombre . '</td>';
             $formulario .= '<td>' . $id_alumno . '</td>';
-            $formulario .= '<td>' . $nota . '/' . $num_preg . '</td>';
+            $formulario .= '<td>' . ($nota != null ? $nota . '/' . $num_preg : 'Pendiente') . '</td>';
             $formulario .= '</tr>';
         }
 
         $formulario .= '</table><br>';
 
         echo $formulario;
+    }
+    else {
+
+        $conexion = conexionBD();
+    
+        $sql = "SELECT notas.id_alumno, notas.id_exam, notas.nota, examenes.nombre, examenes.num_preg 
+                FROM notas
+                LEFT JOIN examenes ON notas.id_exam = examenes.id_exam";  
+    
+        $result = mysqli_query($conexion, $sql);
+    
+        echo "<h2> Listado de Exámenes del Aula </h2>";
+        echo '<form action="#" method="post">';
+        echo '<table class="table-form" border="1">';
+        echo '<tr><th>Seleccionar</th><th>Nombre de Examen</th><th>Nombre de Alumno</th><th>Nota</th></tr>';
+    
+        while ($row = mysqli_fetch_assoc($result)) {
+            $id_exam = $row['id_exam'];
+            $id_alumno = $row['id_alumno'];
+            $nombre = $row['nombre'];
+            $nota = $row['nota'];
+            $num_preg = $row['num_preg'];
+    
+            echo '<tr>';
+            if ($nota != null) {
+                echo '<td><input type="radio" name="examen_alumno" value="' . $id_exam . '_' . $id_alumno . '"></td>';
+            } else {
+                $url = 'listadoadmin.php?examen=' . $id_exam . '&alumno=' . $id_alumno;
+                echo '<td><a class="borrar"href="' . $url . '">Borrar</a></td>';
+            }
+            echo '<td>' . $nombre . '</td>';
+            echo '<td>' . $id_alumno . '</td>';
+            echo '<td>' . ($nota != null ? $nota . '/' . $num_preg : 'Pendiente') . '</td>';
+            echo '</tr>';
+        }
+    
+        echo '</table><br>';
+        echo '</form>';
+    
+        // Para cuando se seleccione un examen para borrar
+        if (isset($_GET['examen'])) {
+            $examenSeleccionado = $_GET["examen"];
+            $alumnoSeleccionado = $_GET["alumno"];
+            
+            echo '<h2> ¿Vas a borrar este examen? </h2>';
+            echo '<form action="" method="POST">';
+            echo '<input type="hidden" name="examenSeleccionado" value="' . $examenSeleccionado . '">';
+            echo '<input type="hidden" name="alumnoSeleccionado" value="' . $alumnoSeleccionado . '">';
+            echo '<a class="borrar"><input type="submit" name="borrar" value="Borrar" class="borrar">';
+            echo '</form>';
+    
+            // Formulario que elimina la nota del examen
+            if (isset($_POST['borrar'])) {
+                $conexion = conexionBD();
+    
+                $examen = $_POST['examenSeleccionado'];
+                $alumno = $_POST['alumnoSeleccionado'];
+    
+                // Delete para eliminar la nota del examen
+                $sql = "DELETE FROM notas WHERE id_exam = '$examen' AND id_alumno = '$alumno';";
+    
+                $result = mysqli_query($conexion, $sql);
+                header('Location: listadoadmin.php');
+            }
+        }
     }
 }
 
@@ -729,5 +794,123 @@ function plantillaPerfil($user, $tipo) {
                             
     }
 
+}
+
+//Función que muestra el listado de asignaturas global para el admin
+function listadoAsignaturasADMIN() {
+    $conexion = conexionBD();
+
+    //Buscamos las asignaturas que no estén registradas en la matricula del alumno en cuestión
+    $sql = "SELECT id, nombre, usuario FROM asignaturas;"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en una tabla en ese contenedor
+    echo "<h2> Listado de Asignaturas del Aula </h2>";
+    echo '<table class="table-form" border="1">';
+    echo '<tr>
+            <th>Nombre</th> 
+            <th>Profesor</th> 
+            <th>Acción</th> 
+        </tr>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
+        $url = 'asignaturas.php?asignatura=' . $row['id'];
+        //Escribimos la fila de la tabla con el nombre de la asignatura y el profesor
+        echo '<tr>';
+        echo '<td>' . $row['nombre'] . '</td>';
+        echo '<td>' . $row['usuario'] . '</td>';
+        echo '<td><a class="borrar" href="' . $url . '">Borrar</a></td>';
+        echo '</tr>';
+    }
+
+    // Cerramos la tabla
+    echo '</table>';
+
+    //Para cuando seleccione una asignatura
+    if(isset($_GET['asignatura'])) {
+        echo '<h2> ¿Vas a borrar esta asignatura? </h2>';
+
+        $asignaturaSeleccionada = $_GET["asignatura"];
+        echo "<form action='' method='POST'>";
+        echo '<input type="hidden" name="asignaturaSeleccionada" value="' . $asignaturaSeleccionada . '">';
+        echo '<input type="submit" value="Borrar">';
+        echo '<a href="asignaturas.php"> Volver </a>';
+        echo '</form>';
+
+        //Formulario que borra una asignatura
+        if(isset($_POST['asignaturaSeleccionada'])) {
+            $conexion = conexionBD();
+
+            $asig = $_POST['asignaturaSeleccionada'];
+
+            //Delete para eliminar esa asignatura
+            $sql = "DELETE FROM asignaturas WHERE id = '$asig';";
+
+            $result = mysqli_query($conexion, $sql);
+            header('Location: asignaturas.php');
+        }
+    }
+}
+
+function listadoUsuarios() {
+    $conexion = conexionBD();
+
+    //Buscamos las asignaturas que no estén registradas en la matricula del alumno en cuestión
+    $sql = "SELECT * FROM usuarios WHERE rol != 'admin';"; 
+
+    $result = mysqli_query($conexion, $sql);
+
+    //Inicializamos la etiqueta para que se ordenen en una tabla en ese contenedor
+    echo "<h2> Listado de Usuarios del Aula </h2>";
+    echo '<table class="table-form" border="1">';
+    echo '<tr>
+            <th>Usuario</th> 
+            <th>email</th>
+            <th>Rol</th> 
+            <th>Acción</th> 
+        </tr>';
+
+    // Bucle que recorre todo el array de resultados de la sentencia anterior y lo escribe
+    while ($row = mysqli_fetch_assoc($result)) {
+        //Creamos la URL para que tenga los datos que nos hacen falta para los GET: la matricula, que es la asignatura impartida
+        $url = 'perfiles.php?usuario=' . $row['ID'];
+        //Escribimos la fila de la tabla con el nombre de la asignatura y el profesor
+        echo '<tr>';
+        echo '<td>' . $row['ID'] . '</td>';
+        echo '<td>' . $row['email'] . '</td>';
+        echo '<td>' . $row['rol'] . '</td>';
+        echo '<td><a class="borrar" href="' . $url . '">Borrar</a></td>';
+        echo '</tr>';
+    }
+
+    // Cerramos la tabla
+    echo '</table>';
+
+    //Para cuando seleccione una asignatura
+    if(isset($_GET['usuario'])) {
+        echo '<h2> ¿Vas a borrar este usuario? </h2>';
+
+        $usuarioSeleccionado = $_GET["usuario"];
+        echo "<form action='' method='POST'>";
+        echo '<input type="hidden" name="usuarioSeleccionado" value="' . $usuarioSeleccionado . '">';
+        echo '<input type="submit" value="Borrar">';
+        echo '</form>';
+
+        //Formulario que borra una asignatura
+        if(isset($_POST['usuarioSeleccionado'])) {
+            $conexion = conexionBD();
+
+            $usu = $_POST['usuarioSeleccionado'];
+
+            //Delete para eliminar esa asignatura
+            $sql = "DELETE FROM usuarios WHERE ID = '$usu';";
+
+            $result = mysqli_query($conexion, $sql);
+            header('Location: perfiles.php');
+        }
+    }
 }
 ?>

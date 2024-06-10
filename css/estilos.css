@@ -302,8 +302,6 @@ input[type=submit] {
 }
 
 #logout {
-margin-left: 25px ;
-
 padding-right: 24px;
 padding-left: 24px;
 max-width: calc(58% - 10px);
@@ -467,5 +465,28 @@ span {
     padding-right: 29px;
     padding-left: 20px;
     max-width: calc(75% - 10px);
+    padding-bottom: 30px;
+}
+
+.borrar {
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #f2f6f7;
+    border: 2px hidden #9db4f0;
+    padding: 0.45em; 
+    height: 5px;
+    color:#646363;
+}
+
+#examADMIN {
+    text-align: center;
+    max-width: calc(80% - 10px);
+    padding-bottom: 28px;
+}
+
+#perfilADMIN{
+    padding-right: 20px;
+    padding-left: 20px;
+    max-width: calc(55% - 10px);
     padding-bottom: 30px;
 }

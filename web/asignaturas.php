@@ -85,7 +85,7 @@
                         }
                     }
                 }
-                else {
+                else if($_SESSION['tipo'] == 'alumno') {
                     if(isset($_GET['matricula'])) {
                         
                         listadoMatricula($_GET['matricula']);
@@ -94,7 +94,7 @@
                         listadoExamenes($_GET['matricula']);
                         echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
                     }
-                    else{
+                    else {
 
                     $comprobante = comprobarAsigAlum($_SESSION['usuario']);
 
@@ -124,6 +124,12 @@
                         echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
                     }
                 }
+            }
+            else {
+
+                echo listadoAsignaturasADMIN();
+
+                echo '<br><br><div align="right" ><a href="../index.php"> Volver </a></div>';
             }
                 ?>
 

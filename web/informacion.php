@@ -10,7 +10,7 @@
     <head>
     <title> Información extra </title>
     <link rel="stylesheet" href="../css/estilos.css?v=1.0">
-    <script src="../js/perfil.js"> </script>
+
     </head>
 
     <body>
@@ -21,5 +21,5 @@
 
         </div>
     </body>
-
+    <script src="../js/perfil.js"> </script>
 </html>
