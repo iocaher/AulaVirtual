@@ -28,6 +28,7 @@
                         // Separar los valores del id_exam y id_alumno
                         list($id_exam, $id_alumno) = explode('_', $examen_alumno);
                         examenCorregir($id_alumno, $id_exam);
+                        
                     }
                     else{
 

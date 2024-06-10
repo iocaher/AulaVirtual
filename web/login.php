@@ -27,10 +27,10 @@ require '../procesos/dbcon.php';
                 echo '<div class="success-message"> &#9747; Usuario o contraseña incorrecta </div><br>'; } ?>
 
                     <label id="campos"> Nombre de Usuario </label> <BR>
-                    <input type="text" name="Usuario" placeholder="usuario" size="28" required><br><br>
+                    <input type="text" name="Usuario" placeholder="usuario" size="28" maxlength="7" required><br><br>
 
                     <label id="campos"> Contraseña </label><br>
-                    <input type="password" name="secreto" size="28" required><br><br>
+                    <input type="password" name="secreto" size="28" maxlength="30" required><br><br>
 
                     <input type="submit" value="Entrar">
                     <a href="register.php"> No estoy registrado </a>
